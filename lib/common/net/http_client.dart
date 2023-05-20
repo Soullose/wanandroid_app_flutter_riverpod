@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
+import 'result_data.dart';
 
 import 'interceptors/error_interceptors.dart';
 import 'interceptors/header_interceptor.dart';
@@ -7,8 +7,8 @@ import 'interceptors/response_interceptors.dart';
 import 'interceptors/token_interceptors.dart';
 
 class HttpManager {
-  static const CONTENT_TYPE_JSON = "application/json";
-  static const CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+  static const contentTypeJson = "application/json";
+  static const contentTypeForm = "application/x-www-form-urlencoded";
 
   final dio = Dio();
 
@@ -20,17 +20,17 @@ class HttpManager {
   }
 
   Future<ResultData?> netFetch(
-      url, {
-        DioMethod method = DioMethod.get,
-        Map<String, dynamic>? params,
-        Object? data,
-        Options? options,
-        Map<String, dynamic>? header,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-        noTip = false,
-      }) async {
-    const _methodValues = {
+    url, {
+    DioMethod method = DioMethod.get,
+    Map<String, dynamic>? params,
+    Object? data,
+    Options? options,
+    Map<String, dynamic>? header,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    noTip = false,
+  }) async {
+    const methodValues = {
       DioMethod.get: 'get',
       DioMethod.post: 'post',
       DioMethod.put: 'put',
@@ -38,7 +38,7 @@ class HttpManager {
       DioMethod.patch: 'patch',
       DioMethod.head: 'head'
     };
-    options ??= Options(method: _methodValues[method]);
+    options ??= Options(method: methodValues[method]);
     // print(options.headers);
 
     resultError(DioError e) {
