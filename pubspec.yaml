@@ -35,10 +35,48 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  dio: ^5.1.1
-  shared_preferences: ^2.1.0
-  connectivity_plus: ^3.0.3
+
+  # https://pub.dev/packages/dio
+  dio: ^5.2.1+1
+
+  # https://pub.dev/packages/connectivity_plus
+  connectivity_plus: ^4.0.1
+
+  # lightweight and blazing fast key-value database
+  # https://pub.dev/packages/hive
+  hive: ^2.2.3
+
+  # https://pub.dev/packages/shared_preferences
+  shared_preferences: ^2.1.2
+
+  # Riverpod, next generation version of Provider (by Remi Rousselet).
+  # https://pub.dev/packages/flutter_riverpod
   hooks_riverpod: ^2.3.6
+
+  # https://pub.dev/packages/go_router
+  go_router: ^7.1.1
+
+  # https://pub.dev/packages/flutter_screenutil
+  flutter_screenutil: ^5.8.4
+
+  # https://pub.dev/packages/flutter_svg
+  flutter_svg: ^2.0.7
+
+  # https://pub.dev/packages/flutter_easyloading
+  flutter_easyloading: ^3.0.5
+
+  # https://pub.dev/packages/fluttertoast
+  fluttertoast: ^8.2.2
+
+  # Used for surface colored branded theming. (by rydmike.com)
+  # https://pub.dev/packages/flex_color_scheme
+  flex_color_scheme: ^7.1.2
+
+  # https://pub.dev/packages/freezed_annotation
+  freezed_annotation: ^2.2.0
+
+  # https://pub.dev/packages/json_annotation
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +88,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner:
+  custom_lint:
+  riverpod_generator: ^2.2.3
+  riverpod_lint: ^1.3.2
+  freezed: ^2.3.5
+  json_serializable: ^6.7.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
