@@ -7,21 +7,17 @@ class StateLogger extends ProviderObserver {
   const StateLogger();
 
   @override
-  void didUpdateProvider(
+  Future<void> didUpdateProvider(
     ProviderBase provider,
     Object? previousValue,
     Object? newValue,
     ProviderContainer container,
-  ) {
-    // TODO use a proper logger
+  ) async {
     if (kDebugMode) {
-      print('''
-{
-  provider: ${provider.name ?? provider.runtimeType},
-  oldValue: $previousValue,
-  newValue: $newValue
-}
-''');
+      print('PROVIDER    : ${provider.name ?? '<NO NAME>'}\n'
+          '  Type      : ${provider.runtimeType}\n'
+          '  Old value : $previousValue\n'
+          '  New value : $newValue');
     }
     super.didUpdateProvider(provider, previousValue, newValue, container);
   }
