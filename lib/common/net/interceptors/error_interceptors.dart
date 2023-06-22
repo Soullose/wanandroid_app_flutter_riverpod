@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../result_data.dart';
 
@@ -14,8 +16,8 @@ class ErrorInterceptors extends InterceptorsWrapper {
 
     if (connectivityResult == ConnectivityResult.none) {
       return handler.reject(
-        DioError(
-            type: DioErrorType.unknown,
+        DioException(
+            type: DioExceptionType.unknown,
             requestOptions: options,
             response: Response(
               requestOptions: options,
@@ -38,16 +40,16 @@ class ErrorInterceptors extends InterceptorsWrapper {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     String errorDescription = "";
 
-    if (err.type == DioErrorType.connectionTimeout) {
+    if (err.type == DioExceptionType.connectionTimeout) {
       errorDescription = "连接超时";
-    } else if (err.type == DioErrorType.receiveTimeout) {
+    } else if (err.type == DioExceptionType.receiveTimeout) {
       errorDescription = "接收数据超时";
-    } else if (err.type == DioErrorType.sendTimeout) {
+    } else if (err.type == DioExceptionType.sendTimeout) {
       errorDescription = "发送数据超时";
-    } else if (err.type == DioErrorType.badResponse) {
+    } else if (err.type == DioExceptionType.badResponse) {
       if (err.response!.statusCode == 401) {
         errorDescription = "登录过期，请重新登录";
       } else if (err.response!.statusCode == 500) {
@@ -55,17 +57,17 @@ class ErrorInterceptors extends InterceptorsWrapper {
       } else {
         errorDescription = "网络请求出错";
       }
-    } else if (err.type == DioErrorType.cancel) {
+    } else if (err.type == DioExceptionType.cancel) {
       errorDescription = "请求已取消";
     } else {
       errorDescription = "网络请求出错";
     }
-    // Fluttertoast.showToast(
-    //     msg: errorDescription,
-    //     fontSize: 16.sp,
-    //     backgroundColor: Colors.white,
-    //     textColor: Colors.black,
-    //     gravity: ToastGravity.CENTER);
+    Fluttertoast.showToast(
+        msg: errorDescription,
+        fontSize: 16.sp,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
+        gravity: ToastGravity.CENTER);
     super.onError(err, handler);
   }
 }

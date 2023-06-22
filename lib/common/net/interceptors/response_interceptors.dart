@@ -1,6 +1,7 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
 
 class ResponseInterceptors extends InterceptorsWrapper {
@@ -9,18 +10,21 @@ class ResponseInterceptors extends InterceptorsWrapper {
       Response<dynamic> response, ResponseInterceptorHandler handler) {
     RequestOptions option = response.requestOptions;
 
-    var value;
+    late ResultData value;
 
     try {
       var header = response.headers[Headers.contentTypeHeader];
-      if (handler != null && header.toString().contains("text")) {
+      if (header.toString().contains("text")) {
         value = ResultData(response.data, true, response.statusCode);
-      } else if (response.statusCode! >= 200 && response.statusCode! < 300) {
+      } else if (response.statusCode! >= HttpStatus.ok &&
+          response.statusCode! < HttpStatus.multipleChoices) {
         value = ResultData(response.data, true, response.statusCode,
             headers: response.headers);
       } else {}
     } catch (e) {
-      print('${e.toString()}${option.path}');
+      if (kDebugMode) {
+        print('${e.toString()}${option.path}');
+      }
       value = ResultData(response.data, false, response.statusCode);
     }
     response.data = value;
