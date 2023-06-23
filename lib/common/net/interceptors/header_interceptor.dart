@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:wanandroid_app_flutter_riverpod/common/constants/constant.dart';
+
+import '../../constants/constant.dart';
 
 ///
 ///header拦截器
