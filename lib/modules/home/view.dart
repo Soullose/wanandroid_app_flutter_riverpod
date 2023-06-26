@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/article_list_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/banner_provider.dart';
+
+import '../../model/article/article_list.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({
@@ -11,46 +15,75 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerFutureProvider = ref.watch(bannerProvider);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('首页'),),
-      body: RepaintBoundary(
-        child: Column(
-          children: [
-            bannerFutureProvider.when(
+    final carouselController = CarouselController();
+    return CustomScrollView(
+      slivers: <Widget>[
+        const SliverAppBar(
+          title: Text('首页'),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            padding: const EdgeInsets.only(top: 2),
+            alignment: Alignment.bottomCenter,
+            child: bannerFutureProvider.when(
               loading: () => const CircularProgressIndicator(),
               error: (err, stack) => Text('Error: $err'),
               data: (data) {
                 return CarouselSlider(
+                  carouselController: carouselController,
                   items: data
                       .map((e) => Center(
-                    child: Image.network(
-                      e.imagePath!,
-                      fit: BoxFit.cover,
-                      // width: 1000,
-                    ),
-                  ))
+                            child: Image.network(
+                              e.imagePath!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              // width: 1000,
+                            ),
+                          ))
                       .toList(),
-                  options: CarouselOptions(height: 190.0),
+                  options: CarouselOptions(
+                      scrollPhysics: const BouncingScrollPhysics(),
+                      autoPlay: true,
+                      aspectRatio: 2,
+                      viewportFraction: 1,
+                      onPageChanged: (index, reason) {
+                        if (kDebugMode) {
+                          print('----:$index');
+                        }
+                      }), //height: 190.0
                 );
               },
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 88,
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: Colors.blue[(index % 5) * 100],
-                    height: 20,
-                    alignment: Alignment.center,
-                    child: Text('$index'),
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        Consumer(
+          builder: (_, WidgetRef ref, __) =>
+              ref.watch(articleListProvider).when(
+                    data: (data) {
+                      final List<Articles> list = data;
+
+                      if (list.isEmpty) {
+                        return const SliverFillRemaining(child: Text('空'));
+                      }
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (_, int index) {
+                            final Articles article = list[index];
+
+                            return Text(article.title!);
+                          },
+                          childCount: list.length,
+                        ),
+                      );
+                    },
+                    error: (err, stack) =>
+                        SliverFillRemaining(child: Text('Error: $err')),
+                    loading: () => const SliverFillRemaining(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+        ),
+      ],
     );
   }
 }

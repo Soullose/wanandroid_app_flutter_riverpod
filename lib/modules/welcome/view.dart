@@ -21,7 +21,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(seconds: 3), () {
+    _timer = Timer(const Duration(seconds: 1), () {
       context.go(RouterPath.home.path);
     });
   }
