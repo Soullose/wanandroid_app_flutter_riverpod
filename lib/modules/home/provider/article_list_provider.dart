@@ -20,7 +20,7 @@ class ArticleList extends _$ArticleList {
     dynamic response =
         await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
     if(kDebugMode) {
-      print(jsonEncode(response.data['data']));
+      print(jsonEncode(response.data['data']['datas']));
     }
     return articlesFromJson(jsonEncode(response.data['data']));
   }

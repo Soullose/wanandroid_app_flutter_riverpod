@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/article_list_provider.dart';
@@ -77,10 +79,12 @@ class HomePage extends ConsumerWidget {
                       );
                     },
                     error: (err, stack) =>
-                        SliverFillRemaining(child: Text('Error: $err')),
-                    loading: () => const SliverFillRemaining(
-                      child: CircularProgressIndicator(),
-                    ),
+                        SliverToBoxAdapter(child: Text('Error: $err')),
+                    loading: () {
+                      EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
+                      EasyLoading.show();
+                      return const CupertinoActivityIndicator();
+                    },
                   ),
         ),
       ],
