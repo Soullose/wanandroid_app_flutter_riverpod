@@ -28,7 +28,7 @@ class HomePage extends ConsumerWidget {
             padding: const EdgeInsets.only(top: 2),
             alignment: Alignment.bottomCenter,
             child: bannerFutureProvider.when(
-              loading: () => const CircularProgressIndicator(),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Text('Error: $err'),
               data: (data) {
                 return CarouselSlider(
@@ -58,35 +58,35 @@ class HomePage extends ConsumerWidget {
             ),
           ),
         ),
-        Consumer(
-          builder: (_, WidgetRef ref, __) =>
-              ref.watch(articleListProvider).when(
-                    data: (data) {
-                      final List<Articles> list = data;
-
-                      if (list.isEmpty) {
-                        return const SliverFillRemaining(child: Text('空'));
-                      }
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (_, int index) {
-                            final Articles article = list[index];
-
-                            return Text(article.title!);
-                          },
-                          childCount: list.length,
-                        ),
-                      );
-                    },
-                    error: (err, stack) =>
-                        SliverToBoxAdapter(child: Text('Error: $err')),
-                    loading: () {
-                      EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
-                      EasyLoading.show();
-                      return const CupertinoActivityIndicator();
-                    },
-                  ),
-        ),
+        // Consumer(
+        //   builder: (_, WidgetRef ref, __) =>
+        //       ref.watch(articleListProvider).when(
+        //             data: (data) {
+        //               final List<Articles> list = data;
+        //
+        //               if (list.isEmpty) {
+        //                 return const SliverFillRemaining(child: Text('空'));
+        //               }
+        //               return SliverList(
+        //                 delegate: SliverChildBuilderDelegate(
+        //                   (_, int index) {
+        //                     final Articles article = list[index];
+        //
+        //                     return Text(article.title!);
+        //                   },
+        //                   childCount: list.length,
+        //                 ),
+        //               );
+        //             },
+        //             error: (err, stack) =>
+        //                 SliverToBoxAdapter(child: Text('Error: $err')),
+        //             loading: () {
+        //               EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
+        //               EasyLoading.show();
+        //               return const CupertinoActivityIndicator();
+        //             },
+        //           ),
+        // ),
       ],
     );
   }

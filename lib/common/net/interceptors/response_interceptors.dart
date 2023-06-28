@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
+
+import '../result_data.dart';
 
 class ResponseInterceptors extends InterceptorsWrapper {
   @override

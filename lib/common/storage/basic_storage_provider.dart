@@ -10,7 +10,7 @@ import 'shared_preferences_provider.dart';
 
 final ipAddressProvider = StateProvider<String>((ref) {
   final preferences = ref.watch(sharedPreferencesProvider);
-  final currentValue = preferences.getString('ip') ?? '172.23.16.1';
+  final currentValue = preferences.getString('ip') ?? '172.27.96.1';
   ref.listenSelf((prev, curr) {
     preferences.setString('ip', curr);
   });
