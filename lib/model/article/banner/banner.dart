@@ -2,13 +2,13 @@
 //
 //     final banner = bannerFromJson(jsonString);
 ///首页banner
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
+// import 'package:freezed_annotation/freezed_annotation.dart';
+// import 'dart:convert';
+//
+// part 'banner.freezed.dart';
+// part 'banner.g.dart';
 
-part 'banner.freezed.dart';
-part 'banner.g.dart';
-
-
+part of '../../models.dart';
 
 List<Banner> bannerFromJson(String str) =>
     List<Banner>.from(json.decode(str).map((x) => Banner.fromJson(x)));

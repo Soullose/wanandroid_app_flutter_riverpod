@@ -2,15 +2,19 @@
 //
 //     final articles = articlesFromJson(jsonString);
 
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
+// import 'package:freezed_annotation/freezed_annotation.dart';
+// import 'dart:convert';
 
-part 'article_list.freezed.dart';
-part 'article_list.g.dart';
+// part 'article_list.freezed.dart';
+// part 'article_list.g.dart';
 
-List<Articles> articlesFromJson(String str) => List<Articles>.from(json.decode(str).map((x) => Articles.fromJson(x)));
+part of '../models.dart';
 
-String articlesToJson(List<Articles> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+List<Articles> articlesFromJson(String str) =>
+    List<Articles>.from(json.decode(str).map((x) => Articles.fromJson(x)));
+
+String articlesToJson(List<Articles> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 @freezed
 class Articles with _$Articles {
@@ -52,7 +56,8 @@ class Articles with _$Articles {
     int? zan,
   }) = _Articles;
 
-  factory Articles.fromJson(Map<String, dynamic> json) => _$ArticlesFromJson(json);
+  factory Articles.fromJson(Map<String, dynamic> json) =>
+      _$ArticlesFromJson(json);
 }
 
 @freezed
@@ -65,7 +70,6 @@ class Tag with _$Tag {
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 }
 
-
 // enum Author { EMPTY, AUTHOR, PURPLE, FLUFFY }
 //
 // final authorValues = EnumValues({
@@ -74,7 +78,6 @@ class Tag with _$Tag {
 //   "郭霖": Author.FLUFFY,
 //   "张鸿洋": Author.PURPLE
 // });
-
 
 //
 // class EnumValues<T> {

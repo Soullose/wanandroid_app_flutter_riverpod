@@ -1,13 +1,12 @@
-
-
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/constants/api_address.dart';
+import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
 
 import '../../../common/net/http_client.dart';
-import '../../../model/article/article_list.dart';
+import '../../../model/models.dart';
 
 part 'article_list_provider.g.dart';
 
@@ -17,12 +16,12 @@ class ArticleList extends _$ArticleList {
 
   Future<List<Articles>> _fetchArticles() async {
     final httpManager = ref.read(httpManagerProvider.notifier);
-    dynamic response =
+    ResultData? response =
         await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
-    if(kDebugMode) {
-      print(jsonEncode(response.data['data']['datas']));
+    if (kDebugMode) {
+      print(jsonEncode(response?.getData()));
     }
-    return articlesFromJson(jsonEncode(response.data['data']));
+    return articlesFromJson(jsonEncode(response?.getData()));
   }
 
   @override
