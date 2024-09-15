@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -7,7 +7,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/article_list_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/banner_provider.dart';
 
-import '../../model/article/article_list.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({
@@ -17,7 +16,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerFutureProvider = ref.watch(bannerProvider);
-    final carouselController = CarouselController();
+    final carouselController = CarouselSliderController();
     return CustomScrollView(
       slivers: <Widget>[
         const SliverAppBar(

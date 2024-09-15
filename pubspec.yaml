@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.6 <4.0.0'
+  sdk: '3.5.2'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,55 +34,55 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.8
 
   # https://pub.dev/packages/dio
-  dio: ^5.2.1+1
+  dio: ^5.7.0
 
   # https://pub.dev/packages/connectivity_plus
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^6.0.5
 
   # lightweight and blazing fast key-value database
   # https://pub.dev/packages/hive
   hive: ^2.2.3
 
   # https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.1.2
+  shared_preferences: ^2.3.2
 
   # Riverpod, next generation version of Provider (by Remi Rousselet).
   # https://pub.dev/packages/flutter_riverpod
-  hooks_riverpod: ^2.3.6
+  hooks_riverpod: ^2.5.2
 
   # https://pub.dev/packages/riverpod_annotation
-  riverpod_annotation: ^2.1.1
+  riverpod_annotation: ^2.3.5
 
   # https://pub.dev/packages/go_router
-  go_router: ^7.1.1
+  go_router: ^14.2.7
 
   # https://pub.dev/packages/flutter_screenutil
-  flutter_screenutil: ^5.8.4
+  flutter_screenutil: ^5.9.3
 
   # https://pub.dev/packages/flutter_svg
-  flutter_svg: ^2.0.7
+  flutter_svg: ^2.0.10+1
 
   # https://pub.dev/packages/flutter_easyloading
   flutter_easyloading: ^3.0.5
 
   # https://pub.dev/packages/fluttertoast
-  fluttertoast: ^8.2.2
+  fluttertoast: ^8.2.8
 
   # Used for surface colored branded theming. (by rydmike.com)
   # https://pub.dev/packages/flex_color_scheme
-  flex_color_scheme: ^7.1.2
+  flex_color_scheme: ^7.3.1
 
   # https://pub.dev/packages/freezed_annotation
-  freezed_annotation: ^2.2.0
+  freezed_annotation: ^2.4.4
 
   # https://pub.dev/packages/json_annotation
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
 
   # https://pub.dev/packages/carousel_slider
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -93,13 +93,13 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
   build_runner:
   custom_lint:
-  riverpod_generator: ^2.2.3
-  riverpod_lint: ^1.3.2
-  freezed: ^2.3.5
-  json_serializable: ^6.7.0
+  riverpod_generator: ^2.4.3
+  riverpod_lint: ^2.3.13
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

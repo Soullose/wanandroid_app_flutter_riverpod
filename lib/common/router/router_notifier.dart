@@ -36,7 +36,7 @@ class RouterNotifier extends _$RouterNotifier implements Listenable {
     //   return null;
     // }
 
-    final isSetting = state.location == RouterPath.setting.path;
+    final isSetting = state.uri.toString() == RouterPath.setting.path;
     if (isSetting) {
       return RouterPath.setting.path;
     }
