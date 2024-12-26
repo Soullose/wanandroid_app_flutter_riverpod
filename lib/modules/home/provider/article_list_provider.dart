@@ -21,7 +21,7 @@ class ArticleList extends _$ArticleList {
     if (kDebugMode) {
       print(jsonEncode(response?.getData()));
     }
-    return articlesFromJson(jsonEncode(response?.getData()));
+    return articlesFromJson(jsonEncode(response?.getData()['datas']));
   }
 
   @override

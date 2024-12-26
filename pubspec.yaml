@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '3.5.2'
+  sdk: ">=3.2.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -40,40 +40,40 @@ dependencies:
   dio: ^5.7.0
 
   # https://pub.dev/packages/connectivity_plus
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^6.1.1
 
   # lightweight and blazing fast key-value database
   # https://pub.dev/packages/hive
   hive: ^2.2.3
 
   # https://pub.dev/packages/shared_preferences
-  shared_preferences: ^2.3.2
+  shared_preferences: ^2.3.4
 
   # Riverpod, next generation version of Provider (by Remi Rousselet).
   # https://pub.dev/packages/flutter_riverpod
-  hooks_riverpod: ^2.5.2
+  hooks_riverpod: ^2.6.1
 
   # https://pub.dev/packages/riverpod_annotation
-  riverpod_annotation: ^2.3.5
+  riverpod_annotation: ^2.6.1
 
   # https://pub.dev/packages/go_router
-  go_router: ^14.2.7
+  go_router: ^14.6.2
 
   # https://pub.dev/packages/flutter_screenutil
   flutter_screenutil: ^5.9.3
 
   # https://pub.dev/packages/flutter_svg
-  flutter_svg: ^2.0.10+1
+  flutter_svg: ^2.0.16
 
   # https://pub.dev/packages/flutter_easyloading
   flutter_easyloading: ^3.0.5
 
   # https://pub.dev/packages/fluttertoast
-  fluttertoast: ^8.2.8
+  fluttertoast: ^8.2.10
 
   # Used for surface colored branded theming. (by rydmike.com)
   # https://pub.dev/packages/flex_color_scheme
-  flex_color_scheme: ^7.3.1
+  flex_color_scheme: ^8.0.2
 
   # https://pub.dev/packages/freezed_annotation
   freezed_annotation: ^2.4.4
@@ -93,13 +93,14 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
-  build_runner:
-  custom_lint:
-  riverpod_generator: ^2.4.3
-  riverpod_lint: ^2.3.13
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.14
+  custom_lint: ^0.7.0
+  custom_lint_builder: ^0.7.0
+  riverpod_generator: ^2.6.3
+  riverpod_lint: ^2.6.3
   freezed: ^2.5.7
-  json_serializable: ^6.8.0
+  json_serializable: ^6.9.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,4 +1,5 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -163,6 +164,14 @@ class AppTheme {
   );
 }
 
-final lightThemeProvider = Provider((ref) => AppTheme.light());
+final lightThemeProvider = Provider((ref) => FlexThemeData.light(
+      scheme: FlexScheme.purpleBrown,
+      appBarElevation: 0.5,
+      typography: Typography.material2021(platform: defaultTargetPlatform),
+    ));
 
-final darkThemeProvider = Provider((ref) => AppTheme.dark());
+final darkThemeProvider = Provider((ref) => FlexThemeData.dark(
+      scheme: FlexScheme.purpleBrown,
+      appBarElevation: 0.5,
+      typography: Typography.material2021(platform: defaultTargetPlatform),
+    ));
