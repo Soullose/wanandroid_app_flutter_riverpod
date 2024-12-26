@@ -83,6 +83,7 @@ dependencies:
 
   # https://pub.dev/packages/carousel_slider
   carousel_slider: ^5.0.0
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:
