@@ -95,9 +95,9 @@ class HomePage extends ConsumerWidget {
               return SliverToBoxAdapter(child: Text('Error: $err'));
             },
             loading: () {
-              EasyLoading.instance.indicatorType =
-                  EasyLoadingIndicatorType.cubeGrid;
-              EasyLoading.show();
+              // EasyLoading.instance.indicatorType =
+              //     EasyLoadingIndicatorType.cubeGrid;
+              // EasyLoading.show();
               return const SliverToBoxAdapter();
             },
           ),
