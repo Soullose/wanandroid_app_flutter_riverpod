@@ -7,6 +7,7 @@ import 'result_data.dart';
 import 'interceptors/error_interceptors.dart';
 import 'interceptors/header_interceptor.dart';
 import 'interceptors/response_interceptors.dart';
+
 // import 'interceptors/token_interceptors.dart';
 import 'interceptors/cookie_interceptors.dart';
 
@@ -31,16 +32,14 @@ class HttpManager extends _$HttpManager {
         compact: true,
         maxWidth: 90,
         enabled: kDebugMode,
-        filter: (options, args){
+        filter: (options, args) {
           // don't print requests with uris containing '/posts'
           // if(options.path.contains('/posts')){
           //   return false;
           // }
           // don't print responses with unit8 list data
           return !args.isResponse || !args.hasUint8ListData;
-        }
-    )
-    );
+        }));
   }
 
   static const contentTypeJson = "application/json";
@@ -58,6 +57,7 @@ class HttpManager extends _$HttpManager {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
     noTip = false,
+    ResponseType? responseType = ResponseType.json,
   }) async {
     const methodValues = {
       DioMethod.get: 'get',
@@ -67,38 +67,41 @@ class HttpManager extends _$HttpManager {
       DioMethod.patch: 'patch',
       DioMethod.head: 'head'
     };
-    options ??= Options(method: methodValues[method]);
+    options ??= Options(method: methodValues[method])
+      ..responseType = responseType;
     // print(options.headers);
-
-    resultError(DioException e) {
-      Response? errorResponse;
-      if (e.response != null) {
-        errorResponse = e.response;
-      } else {
-        errorResponse = Response(
-            statusCode: 999, requestOptions: RequestOptions(path: url));
-      }
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        errorResponse!.statusCode = -2;
-      }
-      return ResultData(e.message, false, errorResponse!.statusCode);
-    }
 
     Response response;
 
     try {
       response = await dio.request(url,
           queryParameters: params, data: data, options: options);
+      return _handleResponse(response);
     } on DioException catch (e) {
-      return resultError(e);
+      return _resultError(e, url);
+    } catch (e) {
+      return ResultData(e.toString(), false, -1);
     }
-    if (response.data is DioException) {
-      return resultError(response.data);
-    }
-
-    return response.data;
   }
+}
+
+ResultData _resultError(DioException e, String url) {
+  Response? errorResponse;
+  if (e.response != null) {
+    errorResponse = e.response;
+  } else {
+    errorResponse =
+        Response(statusCode: 999, requestOptions: RequestOptions(path: url));
+  }
+  if (e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.receiveTimeout) {
+    errorResponse!.statusCode = -2;
+  }
+  return ResultData(e.message, false, errorResponse!.statusCode);
+}
+
+ResultData _handleResponse(Response response) {
+  return ResultData(response.data, true, response.statusCode);
 }
 
 enum DioMethod {
