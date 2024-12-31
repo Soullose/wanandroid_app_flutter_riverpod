@@ -79,7 +79,7 @@ dependencies:
   freezed_annotation: ^2.4.4
 
   # https://pub.dev/packages/json_annotation
-#  json_annotation: ^4.9.0
+  json_annotation: ^4.9.0
 
   # https://pub.dev/packages/carousel_slider
   carousel_slider: ^5.0.0
@@ -101,7 +101,7 @@ dev_dependencies:
   riverpod_generator: ^2.6.3
   riverpod_lint: ^2.6.3
   freezed: ^2.5.7
-#  json_serializable: ^6.9.0
+  json_serializable: ^6.9.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
