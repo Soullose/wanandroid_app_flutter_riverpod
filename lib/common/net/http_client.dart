@@ -23,23 +23,23 @@ class HttpManager extends _$HttpManager {
     // dio.interceptors.add(TokenInterceptors(ref: ref));
     dio.interceptors.add(ErrorInterceptors());
     dio.interceptors.add(ResponseInterceptors());
-    dio.interceptors.add(PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90,
-        enabled: kDebugMode,
-        filter: (options, args) {
-          // don't print requests with uris containing '/posts'
-          // if(options.path.contains('/posts')){
-          //   return false;
-          // }
-          // don't print responses with unit8 list data
-          return !args.isResponse || !args.hasUint8ListData;
-        }));
+    // dio.interceptors.add(PrettyDioLogger(
+    //     requestHeader: true,
+    //     requestBody: true,
+    //     responseBody: true,
+    //     responseHeader: false,
+    //     error: true,
+    //     compact: true,
+    //     maxWidth: 90,
+    //     enabled: kDebugMode,
+    //     filter: (options, args) {
+    //       // don't print requests with uris containing '/posts'
+    //       // if(options.path.contains('/posts')){
+    //       //   return false;
+    //       // }
+    //       // don't print responses with unit8 list data
+    //       return !args.isResponse || !args.hasUint8ListData;
+    //     }));
   }
 
   static const contentTypeJson = "application/json";
@@ -67,16 +67,17 @@ class HttpManager extends _$HttpManager {
       DioMethod.patch: 'patch',
       DioMethod.head: 'head'
     };
-    options ??= Options(method: methodValues[method])
-      ..responseType = responseType;
+    options ??= Options(method: methodValues[method]);
+      // ..responseType = responseType;
     // print(options.headers);
 
-    Response response;
+    // Response response;
 
     try {
-      response = await dio.request(url,
+      Response response = await dio.request(url,
           queryParameters: params, data: data, options: options);
-      return _handleResponse(response);
+      return response.data;
+      // return _handleResponse(response);
     } on DioException catch (e) {
       return _resultError(e, url);
     } catch (e) {
@@ -100,9 +101,9 @@ ResultData _resultError(DioException e, String url) {
   return ResultData(e.message, false, errorResponse!.statusCode);
 }
 
-ResultData _handleResponse(Response response) {
-  return ResultData(response.data, true, response.statusCode);
-}
+// ResultData _handleResponse(Response response) {
+//   return ResultData(response.data, true, response.statusCode);
+// }
 
 enum DioMethod {
   get,

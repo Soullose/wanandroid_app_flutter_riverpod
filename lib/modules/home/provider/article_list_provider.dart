@@ -19,7 +19,7 @@ class ArticleList extends _$ArticleList {
     ResultData? response =
         await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
     if (kDebugMode) {
-      print(jsonEncode(response?.getData()));
+      print(jsonEncode(response?.getData()['datas']));
     }
     return articlesFromJson(jsonEncode(response?.getData()['datas']));
   }

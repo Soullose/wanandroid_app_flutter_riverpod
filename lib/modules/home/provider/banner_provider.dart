@@ -12,6 +12,8 @@ final bannerProvider = FutureProvider<List<Banner>>((ref) async {
   final httpManager = ref.read(httpManagerProvider.notifier);
   ResultData? response = await httpManager.netFetch(ApiAddress.bannerUrl);
   response?.getData().map((e) => LogUtils.d('-------$e'));
+
+  /// ResultData<Banner>.fromJson(e, (json) => Banner.fromJson(json))
   return bannerFromJson(jsonEncode(response?.getData()));
 });
 
