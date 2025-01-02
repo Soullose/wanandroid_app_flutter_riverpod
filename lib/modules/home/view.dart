@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,95 +15,185 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final articleListNotifierProvider = ref.read(articleListProvider.notifier);
+    final showFabNotifierProvider = ref.read(showFabProvider.notifier);
+    final ScrollController scrollController = ScrollController();
+    // 记录滚动信息
+    double scrollDistance = 0;
+    bool isScrolling = false;
+    // 处理滚动通知
+    bool handleScrollNotification(ScrollNotification notification) {
+      // 开始滚动
+      if (notification is ScrollStartNotification) {
+        isScrolling = true;
+        debugPrint('开始滚动');
+      }
+
+      // 滚动过程中
+      else if (notification is ScrollUpdateNotification) {
+        final metrics = notification.metrics;
+        final scrollDelta = notification.scrollDelta ?? 0.0;
+
+        // 更新滚动距离
+        scrollDistance = metrics.pixels;
+
+        // 判断滚动方向
+        if (scrollDelta > 0) {
+          debugPrint('向下滚动: $scrollDelta');
+        } else if (scrollDelta < 0) {
+          debugPrint('向上滚动: $scrollDelta');
+        }
+
+        // 计算滚动百分比
+        final maxScrollExtent =
+            metrics.maxScrollExtent > 0 ? metrics.maxScrollExtent : 1;
+        final scrollPercentage = metrics.pixels / maxScrollExtent;
+        debugPrint('滚动百分比: ${(scrollPercentage * 100).toStringAsFixed(2)}%');
+
+        // 检查是否接近底部
+        final isNearBottom = metrics.pixels >= metrics.maxScrollExtent - 100;
+        if (isNearBottom) {
+          debugPrint('接近底部，可以加载更多数据');
+          // showFabNotifierProvider.enableFab();
+        } else {
+          // showFabNotifierProvider.disableFab();
+        }
+      }
+
+      // 滚动结束
+      else if (notification is ScrollEndNotification) {
+        isScrolling = false;
+        debugPrint('结束滚动，最终位置: $scrollDistance');
+      }
+
+      // 处理过度滚动
+      else if (notification is OverscrollNotification) {
+        debugPrint('过度滚动: ${notification.overscroll}');
+      }
+
+      // 返回true表示消费掉这个通知，不再向上冒泡
+      return true;
+    }
+
+    scrollController.addListener(() {
+      final currentOffset = scrollController.offset;
+      if (currentOffset > 300) {
+        showFabNotifierProvider.enableFab();
+      } else {
+        showFabNotifierProvider.disableFab();
+      }
+    });
+
     final bannerFutureProvider = ref.watch(bannerProvider);
     final carouselController = CarouselSliderController();
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          title: Text('首页'),
-          backgroundColor: ColorScheme.of(context).inversePrimary,
-        ),
-        SliverToBoxAdapter(
-          child: LayoutBuilder(
-            builder: (context, constraints) => Container(
-              width: constraints.maxWidth,
-              // padding: const EdgeInsets.only(top: 2),
-              alignment: Alignment.bottomCenter,
-              child: bannerFutureProvider.when(
-                loading: () {
-                  EasyLoading.instance.indicatorType =
-                      EasyLoadingIndicatorType.ring;
-                  EasyLoading.show();
-                  return const Center();
+    return Scaffold(
+      body: NotificationListener(
+        onNotification: (ScrollNotification notification) {
+          return handleScrollNotification(notification);
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: <Widget>[
+            SliverAppBar(
+              title: Text('首页'),
+              backgroundColor: ColorScheme.of(context).inversePrimary,
+            ),
+            SliverToBoxAdapter(
+              child: LayoutBuilder(
+                builder: (context, constraints) => Container(
+                  width: constraints.maxWidth,
+                  // padding: const EdgeInsets.only(top: 2),
+                  alignment: Alignment.bottomCenter,
+                  child: bannerFutureProvider.when(
+                    loading: () {
+                      EasyLoading.instance.indicatorType =
+                          EasyLoadingIndicatorType.ring;
+                      EasyLoading.show();
+                      return const Center();
+                    },
+                    error: (err, stack) {
+                      EasyLoading.dismiss();
+                      return Text('Error: $err');
+                    },
+                    data: (data) {
+                      EasyLoading.dismiss();
+                      return CarouselSlider(
+                        carouselController: carouselController,
+                        items: data
+                            .map((e) => Center(
+                                  child: Image.network(
+                                    e.imagePath!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    // width: 1000,
+                                  ),
+                                ))
+                            .toList(),
+                        options: CarouselOptions(
+                            scrollPhysics: const BouncingScrollPhysics(),
+                            autoPlay: true,
+                            aspectRatio: 2,
+                            viewportFraction: 1,
+                            onPageChanged: (index, reason) {
+                              // if (kDebugMode) {
+                              //   print('----:$index');
+                              // }
+                            }), //height: 190.0
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Consumer(
+              builder: (_, WidgetRef ref, __) =>
+                  ref.watch(articleListProvider).when(
+                data: (data) {
+                  EasyLoading.dismiss();
+                  final List<Articles>? list = data as List<Articles>?;
+
+                  if (list!.isEmpty) {
+                    return const SliverToBoxAdapter(child: Text('空'));
+                  }
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (_, int index) {
+                        final Articles article = list[index];
+                        // widget.header
+                        return ArticleCard(article: article, index: index);
+                      },
+                      childCount: list.length,
+                    ),
+                  );
                 },
                 error: (err, stack) {
                   EasyLoading.dismiss();
-                  return Text('Error: $err');
+                  return SliverToBoxAdapter(child: Text('Error: $err'));
                 },
-                data: (data) {
-                  EasyLoading.dismiss();
-                  return CarouselSlider(
-                    carouselController: carouselController,
-                    items: data
-                        .map((e) => Center(
-                              child: Image.network(
-                                e.imagePath!,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                // width: 1000,
-                              ),
-                            ))
-                        .toList(),
-                    options: CarouselOptions(
-                        scrollPhysics: const BouncingScrollPhysics(),
-                        autoPlay: true,
-                        aspectRatio: 2,
-                        viewportFraction: 1,
-                        onPageChanged: (index, reason) {
-                          // if (kDebugMode) {
-                          //   print('----:$index');
-                          // }
-                        }), //height: 190.0
-                  );
+                loading: () {
+                  // EasyLoading.instance.indicatorType =
+                  //     EasyLoadingIndicatorType.cubeGrid;
+                  // EasyLoading.show();
+                  return const SliverToBoxAdapter();
                 },
               ),
             ),
-          ),
+          ],
         ),
-        Consumer(
-          builder: (_, WidgetRef ref, __) =>
-              ref.watch(articleListProvider).when(
-            data: (data) {
-              EasyLoading.dismiss();
-              final List<Articles>? list = data as List<Articles>?;
-
-              if (list!.isEmpty) {
-                return const SliverToBoxAdapter(child: Text('空'));
-              }
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, int index) {
-                    final Articles article = list[index];
-
-                    return ArticleCard(article: article, index: index);
-                  },
-                  childCount: list.length,
-                ),
-              );
-            },
-            error: (err, stack) {
-              EasyLoading.dismiss();
-              return SliverToBoxAdapter(child: Text('Error: $err'));
-            },
-            loading: () {
-              // EasyLoading.instance.indicatorType =
-              //     EasyLoadingIndicatorType.cubeGrid;
-              // EasyLoading.show();
-              return const SliverToBoxAdapter();
-            },
-          ),
-        ),
-      ],
+      ),
+      floatingActionButton: ref.watch(showFabProvider)
+          ? FloatingActionButton(
+              child: const Icon(Icons.arrow_upward),
+              onPressed: () {
+                scrollController.animateTo(
+                  0.0,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
+              },
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -132,7 +223,7 @@ class _ArticleCardState extends State<ArticleCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 100),
     );
 
     _fadeAnimation = Tween<double>(
@@ -242,29 +333,29 @@ class _ArticleCardState extends State<ArticleCard>
                               ),
                             ),
                           ],
-                          ...widget.article.tags!
-                              .map((tag) => Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        tag.name!,
-                                        style: const TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
+                          ...widget.article.tags!.map(
+                            (tag) => Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  tag.name!,
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
