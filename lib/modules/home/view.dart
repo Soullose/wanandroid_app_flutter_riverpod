@@ -1,32 +1,31 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wanandroid_app_flutter_riverpod/model/models.dart';
 import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/article_list_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/banner_provider.dart';
 
-import '../../model/models.dart';
-
 class HomePage extends ConsumerWidget {
   const HomePage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bannerFutureProvider = ref.watch(bannerProvider);
+    final carouselController = CarouselSliderController();
     final articleListNotifierProvider = ref.read(articleListProvider.notifier);
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final ScrollController scrollController = ScrollController();
+    final listKey = GlobalKey<SliverAnimatedListState>();
     // 记录滚动信息
     double scrollDistance = 0;
-    bool isScrolling = false;
     // 处理滚动通知
     bool handleScrollNotification(ScrollNotification notification) {
       // 开始滚动
       if (notification is ScrollStartNotification) {
-        isScrolling = true;
-        debugPrint('开始滚动');
+        // debugPrint('开始滚动');
       }
 
       // 滚动过程中
@@ -39,36 +38,33 @@ class HomePage extends ConsumerWidget {
 
         // 判断滚动方向
         if (scrollDelta > 0) {
-          debugPrint('向下滚动: $scrollDelta');
+          // debugPrint('向下滚动: $scrollDelta');
         } else if (scrollDelta < 0) {
-          debugPrint('向上滚动: $scrollDelta');
+          // debugPrint('向上滚动: $scrollDelta');
         }
 
         // 计算滚动百分比
         final maxScrollExtent =
             metrics.maxScrollExtent > 0 ? metrics.maxScrollExtent : 1;
         final scrollPercentage = metrics.pixels / maxScrollExtent;
-        debugPrint('滚动百分比: ${(scrollPercentage * 100).toStringAsFixed(2)}%');
+        // debugPrint('滚动百分比: ${(scrollPercentage * 100).toStringAsFixed(2)}%');
 
         // 检查是否接近底部
         final isNearBottom = metrics.pixels >= metrics.maxScrollExtent - 100;
         if (isNearBottom) {
-          debugPrint('接近底部，可以加载更多数据');
-          // showFabNotifierProvider.enableFab();
-        } else {
-          // showFabNotifierProvider.disableFab();
+          // debugPrint('接近底部，可以加载更多数据');
+          articleListNotifierProvider.fetchNewArticles();
         }
       }
 
       // 滚动结束
       else if (notification is ScrollEndNotification) {
-        isScrolling = false;
-        debugPrint('结束滚动，最终位置: $scrollDistance');
+        // debugPrint('结束滚动，最终位置: $scrollDistance');
       }
 
       // 处理过度滚动
       else if (notification is OverscrollNotification) {
-        debugPrint('过度滚动: ${notification.overscroll}');
+        // debugPrint('过度滚动: ${notification.overscroll}');
       }
 
       // 返回true表示消费掉这个通知，不再向上冒泡
@@ -84,103 +80,122 @@ class HomePage extends ConsumerWidget {
       }
     });
 
-    final bannerFutureProvider = ref.watch(bannerProvider);
-    final carouselController = CarouselSliderController();
+
+
     return Scaffold(
       body: NotificationListener(
-        onNotification: (ScrollNotification notification) {
-          return handleScrollNotification(notification);
-        },
-        child: CustomScrollView(
-          controller: scrollController,
-          slivers: <Widget>[
-            SliverAppBar(
-              title: Text('首页'),
-              backgroundColor: ColorScheme.of(context).inversePrimary,
-            ),
-            SliverToBoxAdapter(
-              child: LayoutBuilder(
-                builder: (context, constraints) => Container(
-                  width: constraints.maxWidth,
-                  // padding: const EdgeInsets.only(top: 2),
-                  alignment: Alignment.bottomCenter,
-                  child: bannerFutureProvider.when(
-                    loading: () {
-                      EasyLoading.instance.indicatorType =
-                          EasyLoadingIndicatorType.ring;
-                      EasyLoading.show();
-                      return const Center();
+          onNotification: (ScrollNotification notification) {
+            return handleScrollNotification(notification);
+          },
+          child: RefreshIndicator(
+            onRefresh: () => ref.refresh(articleListProvider.future),
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: <Widget>[
+                SliverAppBar(
+                  title: Text('首页'),
+                  backgroundColor: ColorScheme.of(context).inversePrimary,
+                ),
+                SliverToBoxAdapter(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => Container(
+                      width: constraints.maxWidth,
+                      // padding: const EdgeInsets.only(top: 2),
+                      alignment: Alignment.bottomCenter,
+                      child: bannerFutureProvider.when(
+                        loading: () {
+                          EasyLoading.instance.indicatorType =
+                              EasyLoadingIndicatorType.ring;
+                          EasyLoading.show();
+                          return const Center();
+                        },
+                        error: (err, stack) {
+                          EasyLoading.dismiss();
+                          return Text('Error: $err');
+                        },
+                        data: (data) {
+                          EasyLoading.dismiss();
+                          return CarouselSlider(
+                            carouselController: carouselController,
+                            items: data
+                                .map((e) => Center(
+                                      child: Image.network(
+                                        e.imagePath!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        // width: 1000,
+                                      ),
+                                    ))
+                                .toList(),
+                            options: CarouselOptions(
+                                scrollPhysics: const BouncingScrollPhysics(),
+                                autoPlay: true,
+                                aspectRatio: 2,
+                                viewportFraction: 1,
+                                onPageChanged: (index, reason) {
+                                  // if (kDebugMode) {
+                                  //   print('----:$index');
+                                  // }
+                                }), //height: 190.0
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Consumer(
+                  builder: (_, WidgetRef ref, __) =>
+                      ref.watch(articleListProvider).when(
+                    data: (data) {
+                      EasyLoading.dismiss();
+                      final List<Articles>? list = data;
+
+                      if (list!.isEmpty) {
+                        return const SliverToBoxAdapter(child: Text('空'));
+                      }
+                      return SliverAnimatedList(
+                        key: listKey,
+                        initialItemCount: list.length,
+                        itemBuilder: (context, index, animation) {
+                          final Articles article = list[index];
+                          return ArticleCard(
+                            article: article,
+                            index: index,
+                            isVisible: true,
+                          );
+                        },
+                      );
+
+                      //   SliverList(
+                      //   delegate: SliverChildBuilderDelegate(
+                      //     (_, int index) {
+                      //       final Articles article = list[index];
+                      //       // widget.header
+                      //       return ArticleCard(
+                      //         article: article,
+                      //         index: index,
+                      //         isVisible: true,
+                      //       );
+                      //     },
+                      //     childCount: list.length,
+                      //   ),
+                      // );
                     },
                     error: (err, stack) {
                       EasyLoading.dismiss();
-                      return Text('Error: $err');
+                      return SliverToBoxAdapter(child: Text('Error: $err'));
                     },
-                    data: (data) {
-                      EasyLoading.dismiss();
-                      return CarouselSlider(
-                        carouselController: carouselController,
-                        items: data
-                            .map((e) => Center(
-                                  child: Image.network(
-                                    e.imagePath!,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    // width: 1000,
-                                  ),
-                                ))
-                            .toList(),
-                        options: CarouselOptions(
-                            scrollPhysics: const BouncingScrollPhysics(),
-                            autoPlay: true,
-                            aspectRatio: 2,
-                            viewportFraction: 1,
-                            onPageChanged: (index, reason) {
-                              // if (kDebugMode) {
-                              //   print('----:$index');
-                              // }
-                            }), //height: 190.0
-                      );
+                    loading: () {
+                      // EasyLoading.instance.indicatorType =
+                      //     EasyLoadingIndicatorType.cubeGrid;
+                      // EasyLoading.show();
+                      return const SliverToBoxAdapter();
                     },
                   ),
                 ),
-              ),
+              ],
             ),
-            Consumer(
-              builder: (_, WidgetRef ref, __) =>
-                  ref.watch(articleListProvider).when(
-                data: (data) {
-                  EasyLoading.dismiss();
-                  final List<Articles>? list = data as List<Articles>?;
-
-                  if (list!.isEmpty) {
-                    return const SliverToBoxAdapter(child: Text('空'));
-                  }
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (_, int index) {
-                        final Articles article = list[index];
-                        // widget.header
-                        return ArticleCard(article: article, index: index);
-                      },
-                      childCount: list.length,
-                    ),
-                  );
-                },
-                error: (err, stack) {
-                  EasyLoading.dismiss();
-                  return SliverToBoxAdapter(child: Text('Error: $err'));
-                },
-                loading: () {
-                  // EasyLoading.instance.indicatorType =
-                  //     EasyLoadingIndicatorType.cubeGrid;
-                  // EasyLoading.show();
-                  return const SliverToBoxAdapter();
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          )),
       floatingActionButton: ref.watch(showFabProvider)
           ? FloatingActionButton(
               child: const Icon(Icons.arrow_upward),
@@ -201,12 +216,14 @@ class HomePage extends ConsumerWidget {
 class ArticleCard extends StatefulWidget {
   final Articles article;
   final int index;
+  final bool isVisible; // 控制卡片是否显示的标志
 
   const ArticleCard({
-    Key? key,
+    super.key,
     required this.article,
     required this.index,
-  }) : super(key: key);
+    required this.isVisible,
+  });
 
   @override
   State<ArticleCard> createState() => _ArticleCardState();
@@ -214,220 +231,206 @@ class ArticleCard extends StatefulWidget {
 
 class _ArticleCardState extends State<ArticleCard>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.5, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
-
-    Future.delayed(
-      Duration(milliseconds: widget.index * 100),
-      () {
-        if (mounted && _controller != null) {
-          _controller.forward();
-        }
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _slideAnimation,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(
+        begin: 0.0,
+        end: widget.isVisible ? 1.0 : 0.0,
+      ),
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - value)),
+          child: Opacity(
+            opacity: value,
+            child: child,
+          ),
+        );
+      },
+      child: _BuildCard(
+        widget: widget,
+      ),
+    );
+  }
+}
+
+class _BuildCard extends StatelessWidget {
+  const _BuildCard({
+    required this.widget,
+  });
+
+  final ArticleCard widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: () {
-                  // Handle article tap - maybe open the link
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              // Handle article tap - maybe open the link
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Container(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          widget.article.chapterName!,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      if (widget.article.fresh!) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'NEW',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                      ...widget.article.tags!.map(
+                        (tag) => Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1),
+                              color: Colors.blue.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              widget.article.chapterName!,
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                              tag.name!,
+                              style: const TextStyle(
+                                color: Colors.blue,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
-                          if (widget.article.fresh!) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.green.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                'NEW',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                          ...widget.article.tags!.map(
-                            (tag) => Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  tag.name!,
-                                  style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        widget.article.title!,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          if (widget.article.author!.isNotEmpty) ...[
-                            CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1),
-                              child: Text(
-                                widget.article.author![0].toUpperCase(),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              widget.article.author!,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ] else if (widget.article.shareUser!.isNotEmpty) ...[
-                            CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Theme.of(context)
-                                  .primaryColor
-                                  .withValues(alpha: 0.1),
-                              child: Text(
-                                widget.article.shareUser![0].toUpperCase(),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              widget.article.shareUser!,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                          const Spacer(),
-                          Icon(
-                            Icons.access_time,
-                            size: 14,
-                            color: Theme.of(context).textTheme.bodySmall?.color,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            widget.article.niceDate!,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 12),
+                  Text(
+                    widget.article.title!,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      if (widget.article.author!.isNotEmpty) ...[
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
+                          child: Text(
+                            widget.article.author![0].toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.article.author!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ] else if (widget.article.shareUser!.isNotEmpty) ...[
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
+                          child: Text(
+                            widget.article.shareUser![0].toUpperCase(),
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.article.shareUser!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                      const Spacer(),
+                      Icon(
+                        Icons.access_time,
+                        size: 14,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.article.niceDate!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

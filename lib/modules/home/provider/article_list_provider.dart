@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/constants/api_address.dart';
+import 'package:wanandroid_app_flutter_riverpod/common/net/http_client.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
-
-import '../../../common/net/http_client.dart';
-import '../../../model/models.dart';
+import 'package:wanandroid_app_flutter_riverpod/model/models.dart';
 
 part 'article_list_provider.g.dart';
 
@@ -15,42 +11,48 @@ part 'article_list_provider.g.dart';
 class ArticleList extends _$ArticleList {
   // final http;
 
-  Future<List<Articles>> _fetchArticles() async {
+  int currentPage = 0;
+  int pageCount = 0;
+
+  Future<List<Articles>?> _fetchArticles() async {
     final httpManager = ref.read(httpManagerProvider.notifier);
     ResultData? response =
         await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
-    if (kDebugMode) {
-      print(jsonEncode(response?.getData()['datas']));
-    }
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
         response?.getData(), (json) => Articles.fromJson(json));
     if (kDebugMode) {
-      print('articles:${articles}');
+      print('articles:${articles.datas}');
     }
-    return articlesFromJson(jsonEncode(response?.getData()['datas']));
+    currentPage = articles.curPage!;
+    pageCount = articles.pageCount! - 1;
+    return articles.datas;
   }
 
   @override
-  FutureOr build() {
+  FutureOr<List<Articles>?> build() {
     // final http = ref.read(httpManagerProvider.notifier);
     return _fetchArticles();
   }
 
-  Future<void> fetchNewArticles(int pageNumber) async {
+  Future<void> fetchNewArticles() async {
+    if (pageCount == currentPage) {
+      return;
+    }
+    if (kDebugMode) {
+      print('当前页:$currentPage');
+    }
     final httpManager = ref.read(httpManagerProvider.notifier);
     ResultData? response = await httpManager
-        .netFetch(ApiAddress.articleUrl(pageNumber: pageNumber));
-    if (kDebugMode) {
-      print(jsonEncode(response?.getData()['datas']));
-    }
-    final previousState = await future;
+        .netFetch(ApiAddress.articleUrl(pageNumber: currentPage++));
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
         response?.getData(), (json) => Articles.fromJson(json));
-    state = AsyncData(articles.datas);
+    currentPage = articles.curPage!;
+    // state = AsyncData(articles.datas);
+    // state.copyWithPrevious(AsyncValue<List<Articles>?>.data(articles.datas));
+    state = AsyncValue.data([...(state.value ?? []), ...?articles.datas]);
     // return articlesFromJson(jsonEncode(response?.getData()['datas']));
   }
 }
-
 
 @riverpod
 class ShowFab extends _$ShowFab {
