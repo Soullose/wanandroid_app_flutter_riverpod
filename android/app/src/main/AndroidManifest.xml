@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="wanandroid_app_flutter_riverpod"
+        android:label="玩安卓"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
