@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,10 +20,14 @@ class HomePage extends ConsumerWidget {
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final ScrollController scrollController = ScrollController();
     final listKey = GlobalKey<SliverAnimatedListState>();
-    // 记录滚动信息
-    double scrollDistance = 0;
+
     // 处理滚动通知
     bool handleScrollNotification(ScrollNotification notification) {
+      // 记录滚动信息
+      // double scrollDistance = 0;
+      // ScrollMetrics metrics;
+      // double scrollDelta = 0.0;
+      // bool isNearBottom = false;
       // 开始滚动
       if (notification is ScrollStartNotification) {
         // debugPrint('开始滚动');
@@ -30,11 +35,11 @@ class HomePage extends ConsumerWidget {
 
       // 滚动过程中
       else if (notification is ScrollUpdateNotification) {
-        final metrics = notification.metrics;
-        final scrollDelta = notification.scrollDelta ?? 0.0;
+        ScrollMetrics metrics = notification.metrics;
+        double scrollDelta = notification.scrollDelta!;
 
         // 更新滚动距离
-        scrollDistance = metrics.pixels;
+        double scrollDistance = metrics.pixels;
 
         // 判断滚动方向
         if (scrollDelta > 0) {
@@ -50,16 +55,23 @@ class HomePage extends ConsumerWidget {
         // debugPrint('滚动百分比: ${(scrollPercentage * 100).toStringAsFixed(2)}%');
 
         // 检查是否接近底部
-        final isNearBottom = metrics.pixels >= metrics.maxScrollExtent - 100;
+        bool isNearBottom = metrics.pixels >= metrics.maxScrollExtent - 100;
         if (isNearBottom) {
           // debugPrint('接近底部，可以加载更多数据');
-          articleListNotifierProvider.fetchNewArticles();
+          // articleListNotifierProvider.fetchNewArticles();
         }
       }
 
       // 滚动结束
       else if (notification is ScrollEndNotification) {
         // debugPrint('结束滚动，最终位置: $scrollDistance');
+        if (notification.metrics.pixels >=
+            notification.metrics.maxScrollExtent) {
+          if(kDebugMode) {
+            print('加载更多数据');
+          }
+          articleListNotifierProvider.fetchNewArticles();
+        }
       }
 
       // 处理过度滚动
@@ -79,8 +91,6 @@ class HomePage extends ConsumerWidget {
         showFabNotifierProvider.disableFab();
       }
     });
-
-
 
     return Scaffold(
       body: NotificationListener(

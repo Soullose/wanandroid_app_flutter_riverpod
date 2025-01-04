@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,30 +13,41 @@ class ErrorInterceptors extends InterceptorsWrapper {
       RequestOptions options, RequestInterceptorHandler handler) async {
     //没有网络
     // bool isConnectivity = await BasicUtils.checkConnectivity();
-    var connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.none) {
-      return handler.reject(
-        DioException(
-            type: DioExceptionType.unknown,
-            requestOptions: options,
-            response: Response(
-              requestOptions: options,
-              statusCode: -1,
-              data: ResultData("网络错误", false, -1),
-            ),
-            message: "网络错误未连接网络"),
-      );
-      // handler.resolve(response)
-      // return handler.reject(DioError(
-      //     requestOptions: options,
-      //     type: DioErrorType.unknown,
-      //     response: Response(
-      //       statusCode: -1,
-      //       requestOptions: options,
-      //       data: ResultData("网络错误", false, -1),
-      //     )));
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if(kDebugMode) {
+      print('connectivityResult:$connectivityResult');
     }
+    Connectivity().onConnectivityChanged.listen((event) {
+      if(kDebugMode) {
+        print('event:$event');
+      }
+      if (event.contains(ConnectivityResult.none)) {
+        return handler.reject(
+          DioException(
+              type: DioExceptionType.unknown,
+              requestOptions: options,
+              response: Response(
+                requestOptions: options,
+                statusCode: -1,
+                data: ResultData("网络错误", false, -1),
+              ),
+              message: "网络错误未连接网络"),
+        );
+      }
+    });
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   return handler.reject(
+    //     DioException(
+    //         type: DioExceptionType.unknown,
+    //         requestOptions: options,
+    //         response: Response(
+    //           requestOptions: options,
+    //           statusCode: -1,
+    //           data: ResultData("网络错误", false, -1),
+    //         ),
+    //         message: "网络错误未连接网络"),
+    //   );
+    // }
     super.onRequest(options, handler);
   }
 

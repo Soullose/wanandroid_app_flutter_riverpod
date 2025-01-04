@@ -1,15 +1,15 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'result_data.dart';
+import 'dart:io';
 
-import 'interceptors/error_interceptors.dart';
-import 'interceptors/header_interceptor.dart';
-import 'interceptors/response_interceptors.dart';
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // import 'interceptors/token_interceptors.dart';
 import 'interceptors/cookie_interceptors.dart';
+import 'interceptors/error_interceptors.dart';
+import 'interceptors/header_interceptor.dart';
+import 'interceptors/response_interceptors.dart';
+import 'result_data.dart';
 
 part 'http_client.g.dart';
 
@@ -45,7 +45,13 @@ class HttpManager extends _$HttpManager {
   static const contentTypeJson = "application/json";
   static const contentTypeForm = "application/x-www-form-urlencoded";
 
-  final dio = Dio();
+  final dio = Dio()..httpClientAdapter = IOHttpClientAdapter(createHttpClient:() {
+    final HttpClient client = HttpClient();
+    client.badCertificateCallback= (cert, host, port) {
+      return true;
+    };
+    return client;
+  });
 
   Future<ResultData?> netFetch(
     url, {

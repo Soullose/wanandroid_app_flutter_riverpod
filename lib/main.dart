@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +14,13 @@ import 'common/utils/state_logger/state_logger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpClient().badCertificateCallback =
+      (X509Certificate cert, String host, int port) {
+    // 根据需要处理证书验证逻辑
+    final v = cert.subject.toLowerCase().endsWith('*.wanandroid.com') &&
+        host.toLowerCase().endsWith('.wanandroid.com');
+    return true; // 只用于测试环境，生产环境中应严格验证证书
+  };
   final prefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
