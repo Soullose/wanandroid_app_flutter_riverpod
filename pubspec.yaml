@@ -84,6 +84,7 @@ dependencies:
   # https://pub.dev/packages/carousel_slider
   carousel_slider: ^5.0.0
   pretty_dio_logger: ^1.4.0
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
@@ -104,7 +105,7 @@ dev_dependencies:
   json_serializable: ^6.9.0
 
 # For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+# following page: https://dart.dev/tools/pub/pubspecd
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -115,8 +116,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+#  assets:
+#    - assets/pem/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
