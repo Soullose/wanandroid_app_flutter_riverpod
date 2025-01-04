@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -129,12 +130,16 @@ class HomePage extends ConsumerWidget {
                             carouselController: carouselController,
                             items: data
                                 .map((e) => Center(
-                                      child: Image.network(
-                                        e.imagePath!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        // width: 1000,
+                                      child: CachedNetworkImage(
+                                        imageUrl: e.imagePath!,
                                       ),
+
+                                      // Image.network(
+                                      //   e.imagePath!,
+                                      //   fit: BoxFit.cover,
+                                      //   width: double.infinity,
+                                      //   // width: 1000,
+                                      // ),
                                     ))
                                 .toList(),
                             options: CarouselOptions(

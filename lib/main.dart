@@ -14,13 +14,7 @@ import 'common/utils/state_logger/state_logger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  HttpClient().badCertificateCallback =
-      (X509Certificate cert, String host, int port) {
-    // 根据需要处理证书验证逻辑
-    final v = cert.subject.toLowerCase().endsWith('*.wanandroid.com') &&
-        host.toLowerCase().endsWith('.wanandroid.com');
-    return true; // 只用于测试环境，生产环境中应严格验证证书
-  };
+  HttpOverrides.global = MyHttpOverrides();
   final prefs = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
@@ -31,6 +25,16 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
+}
+
+// HTTP证书验证覆盖类
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 class MyApp extends ConsumerWidget {
