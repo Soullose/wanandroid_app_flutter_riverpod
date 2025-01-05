@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../common/router/router_path.dart';
+import 'package:rive/rive.dart' as rive;
+import 'package:wanandroid_app_flutter_riverpod/common/router/router_path.dart';
 
 class WelcomePage extends ConsumerStatefulWidget {
   const WelcomePage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   ConsumerState createState() => _WelcomePageState();
@@ -21,7 +21,7 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(seconds: 1), () {
+    _timer = Timer(const Duration(seconds: 3), () {
       context.go(RouterPath.home.path);
     });
   }
@@ -34,12 +34,30 @@ class _WelcomePageState extends ConsumerState<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Material(
+    return Material(
       child: Stack(
         children: [
+          Align(
+            alignment: Alignment(0.0, -0.6),
+            child: SizedBox(
+              width: 240,
+              height: 240,
+              child: rive.RiveAnimation.asset(
+                'assets/file/birb.riv',
+                animations: const ["lookUp"],
+                onInit: (arb) {
+                  var controller =
+                      rive.StateMachineController.fromArtboard(arb, "birb");
+                  var smi = controller?.findInput<bool>("dance");
+                  arb.addController(controller!);
+                  smi?.value == true;
+                },
+              ),
+            ),
+          ),
           Center(
             child: Text('欢迎页'),
-          )
+          ),
         ],
       ),
     );

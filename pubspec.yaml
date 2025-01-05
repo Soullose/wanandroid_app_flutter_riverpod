@@ -85,6 +85,7 @@ dependencies:
   carousel_slider: ^5.0.0
   pretty_dio_logger: ^1.4.0
   cached_network_image: ^3.4.1
+  rive: ^0.13.20
 
 dev_dependencies:
   flutter_test:
@@ -116,8 +117,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-#  assets:
-#    - assets/pem/
+  assets:
+    - assets/file/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
