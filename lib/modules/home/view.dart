@@ -105,6 +105,14 @@ class HomePage extends ConsumerWidget {
                 SliverAppBar(
                   title: Text('首页'),
                   backgroundColor: ColorScheme.of(context).inversePrimary,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        // Navigator.pushNamed(context, '/search');
+                      },
+                    ),
+                  ],
                 ),
                 SliverToBoxAdapter(
                   child: LayoutBuilder(
