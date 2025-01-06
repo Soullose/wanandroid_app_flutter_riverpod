@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/constants/api_address.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/http_client.dart';
@@ -10,11 +11,14 @@ part 'article_list_provider.g.dart';
 @riverpod
 class ArticleList extends _$ArticleList {
   // final http;
-
+  final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
   int currentPage = 0;
   int pageCount = 0;
 
-  Future<List<Articles>?> _fetchArticles() async {
+  late List currentList = [];
+  late int oldLength = 0;
+
+  Future<List<Articles>> _fetchArticles() async {
     final httpManager = ref.read(httpManagerProvider.notifier);
     ResultData? response =
         await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
@@ -25,11 +29,21 @@ class ArticleList extends _$ArticleList {
     }
     currentPage = articles.curPage!;
     pageCount = articles.pageCount! - 1;
-    return articles.datas;
+
+    currentList = articles.datas ?? [];
+    oldLength = currentList.length;
+    // 通知 SliverAnimatedList 插入新项目
+    for (var i = 0; i < currentList.length; i++) {
+      _listKey.currentState?.insertItem(
+        oldLength + i,
+        duration: const Duration(milliseconds: 300),
+      );
+    }
+    return articles.datas ?? [];
   }
 
   @override
-  FutureOr<List<Articles>?> build() {
+  FutureOr<List<Articles>> build() {
     // final http = ref.read(httpManagerProvider.notifier);
     return _fetchArticles();
   }
@@ -38,9 +52,14 @@ class ArticleList extends _$ArticleList {
     if (pageCount == currentPage) {
       return;
     }
+    // state = const AsyncValue.loading();
+    state = const AsyncLoading<List<Articles>>().copyWithPrevious(state);
     if (kDebugMode) {
       print('当前页:$currentPage');
     }
+    currentList = state.value ?? [];
+    oldLength = currentList.length;
+
     final httpManager = ref.read(httpManagerProvider.notifier);
     ResultData? response = await httpManager
         .netFetch(ApiAddress.articleUrl(pageNumber: currentPage++));
@@ -49,9 +68,21 @@ class ArticleList extends _$ArticleList {
     currentPage = articles.curPage!;
     // state = AsyncData(articles.datas);
     // state.copyWithPrevious(AsyncValue<List<Articles>?>.data(articles.datas));
+    // state = await AsyncValue.guard(() async {
+    //   return articles.datas!;
+    // });
     state = AsyncValue.data([...(state.value ?? []), ...?articles.datas]);
     // return articlesFromJson(jsonEncode(response?.getData()['datas']));
+    // 通知 SliverAnimatedList 插入新项目
+    for (var i = 0; i < articles.datas!.length; i++) {
+      _listKey.currentState?.insertItem(
+        oldLength + i,
+        duration: const Duration(milliseconds: 500),
+      );
+    }
   }
+
+  GlobalKey<SliverAnimatedListState> get animatedListKey => _listKey;
 }
 
 @riverpod

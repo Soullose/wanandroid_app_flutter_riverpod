@@ -20,8 +20,7 @@ class HomePage extends ConsumerWidget {
     final articleListNotifierProvider = ref.read(articleListProvider.notifier);
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final ScrollController scrollController = ScrollController();
-    final listKey = GlobalKey<SliverAnimatedListState>();
-
+    final listKey = articleListNotifierProvider.animatedListKey;
     // 处理滚动通知
     bool handleScrollNotification(ScrollNotification notification) {
       // 记录滚动信息
@@ -68,7 +67,7 @@ class HomePage extends ConsumerWidget {
         // debugPrint('结束滚动，最终位置: $scrollDistance');
         if (notification.metrics.pixels >=
             notification.metrics.maxScrollExtent) {
-          if(kDebugMode) {
+          if (kDebugMode) {
             print('加载更多数据');
           }
           articleListNotifierProvider.fetchNewArticles();
@@ -112,7 +111,7 @@ class HomePage extends ConsumerWidget {
                     builder: (context, constraints) => Container(
                       width: constraints.maxWidth,
                       // padding: const EdgeInsets.only(top: 2),
-                      alignment: Alignment.bottomCenter,
+                      alignment: Alignment.bottomLeft,
                       child: bannerFutureProvider.when(
                         loading: () {
                           EasyLoading.instance.indicatorType =
@@ -162,10 +161,12 @@ class HomePage extends ConsumerWidget {
                   builder: (_, WidgetRef ref, __) =>
                       ref.watch(articleListProvider).when(
                     data: (data) {
-                      EasyLoading.dismiss();
-                      final List<Articles>? list = data;
-
-                      if (list!.isEmpty) {
+                      // EasyLoading.dismiss();
+                      final List<Articles> list = data;
+                      if (kDebugMode) {
+                        print('长度:${list.length}');
+                      }
+                      if (list.isEmpty) {
                         return const SliverToBoxAdapter(child: Text('空'));
                       }
                       return SliverAnimatedList(
