@@ -51,12 +51,12 @@ class TokenInterceptors extends QueuedInterceptorsWrapper {
     if (kDebugMode) {
       print('token:$authorization');
     }
-    final token = ref.read(tokenProvider.notifier);
-    token.state = authorization;
+    ref.read(tokenProvider.notifier).updateToken(authorization);
+    // token.state = authorization;
   }
 
   String? getToken() {
-    final token = ref.read(tokenProvider.notifier);
-    return token.state;
+    final token = ref.read(tokenProvider);
+    return token;
   }
 }

@@ -33,7 +33,7 @@ class AppThemeMode extends AutoDisposeAsyncNotifier<ThemeMode> {
   }
 
   void _persistenceRefreshThemeMode() {
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (next.isLoading) return;
       switch (next.value!) {
         case ThemeMode.light:

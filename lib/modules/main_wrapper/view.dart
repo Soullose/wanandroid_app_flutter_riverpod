@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class MainWrapperPage extends ConsumerWidget {
   const MainWrapperPage({
     required this.navigationShell,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The navigation shell and container for the branch Navigators.
   final StatefulNavigationShell navigationShell;

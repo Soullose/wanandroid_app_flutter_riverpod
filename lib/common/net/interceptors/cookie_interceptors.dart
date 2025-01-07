@@ -38,12 +38,12 @@ class CookieInterceptors extends QueuedInterceptorsWrapper {
     if (kDebugMode) {
       print('cookie:$setCookie');
     }
-    final cookie = ref.read(cookieProvider.notifier);
-    cookie.state = setCookie;
+    ref.read(cookieProvider.notifier).updateCookie(setCookie);
+    // cookie.state = setCookie;
   }
 
   List<String>? getCookie() {
-    final cookie = ref.read(cookieProvider.notifier);
-    return cookie.state;
+    final cookie = ref.read(cookieProvider);
+    return cookie;
   }
 }
