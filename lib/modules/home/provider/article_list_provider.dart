@@ -45,6 +45,10 @@ class ArticleList extends _$ArticleList {
   @override
   FutureOr<List<Articles>> build() {
     // final http = ref.read(httpManagerProvider.notifier);
+    listenSelf((prev, curr) {
+      // prev?.value = [...(prev.value ?? []), ...?curr.value];
+      print('xxx');
+    });
     return _fetchArticles();
   }
 
@@ -53,7 +57,7 @@ class ArticleList extends _$ArticleList {
       return;
     }
     // state = const AsyncValue.loading();
-    state = const AsyncLoading<List<Articles>>().copyWithPrevious(state);
+    // state = const AsyncLoading<List<Articles>>().copyWithPrevious(state);
     if (kDebugMode) {
       print('当前页:$currentPage');
     }
@@ -66,13 +70,7 @@ class ArticleList extends _$ArticleList {
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
         response?.getData(), (json) => Articles.fromJson(json));
     currentPage = articles.curPage!;
-    // state = AsyncData(articles.datas);
-    // state.copyWithPrevious(AsyncValue<List<Articles>?>.data(articles.datas));
-    // state = await AsyncValue.guard(() async {
-    //   return articles.datas!;
-    // });
     state = AsyncValue.data([...(state.value ?? []), ...?articles.datas]);
-    // return articlesFromJson(jsonEncode(response?.getData()['datas']));
     // 通知 SliverAnimatedList 插入新项目
     for (var i = 0; i < articles.datas!.length; i++) {
       _listKey.currentState?.insertItem(

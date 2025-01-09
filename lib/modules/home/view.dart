@@ -16,6 +16,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerFutureProvider = ref.watch(bannerProvider);
+    final articleState = ref.watch(articleListProvider);
     final carouselController = CarouselSliderController();
     final articleListNotifierProvider = ref.read(articleListProvider.notifier);
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
@@ -92,6 +93,12 @@ class HomePage extends ConsumerWidget {
       }
     });
 
+    // if (articleState.isLoading) {
+    //   return const Center(
+    //     child: CircularProgressIndicator(),
+    //   );
+    // }
+
     return Scaffold(
       body: NotificationListener(
           onNotification: (ScrollNotification notification) {
@@ -166,8 +173,7 @@ class HomePage extends ConsumerWidget {
                   ),
                 ),
                 Consumer(
-                  builder: (_, WidgetRef ref, __) =>
-                      ref.watch(articleListProvider).when(
+                  builder: (_, WidgetRef ref, __) => articleState.when(
                     data: (data) {
                       // EasyLoading.dismiss();
                       final List<Articles> list = data;
@@ -206,7 +212,7 @@ class HomePage extends ConsumerWidget {
                       // );
                     },
                     error: (err, stack) {
-                      EasyLoading.dismiss();
+                      // EasyLoading.dismiss();
                       return SliverToBoxAdapter(child: Text('Error: $err'));
                     },
                     loading: () {
