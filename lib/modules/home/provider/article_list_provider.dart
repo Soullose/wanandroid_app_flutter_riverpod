@@ -4,14 +4,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/constants/api_address.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/http_client.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
-import 'package:wanandroid_app_flutter_riverpod/model/models.dart';
+import 'package:wanandroid_app_flutter_riverpod/model/article/article_list.dart';
+import 'package:wanandroid_app_flutter_riverpod/model/pagination_data.dart';
 
 part 'article_list_provider.g.dart';
 
 @riverpod
 class ArticleList extends _$ArticleList {
   // final http;
-  final GlobalKey<SliverAnimatedListState> _listKey = GlobalKey<SliverAnimatedListState>();
+  final GlobalKey<SliverAnimatedListState> _listKey =
+      GlobalKey<SliverAnimatedListState>();
   int currentPage = 0;
   int pageCount = 0;
 
@@ -23,7 +25,8 @@ class ArticleList extends _$ArticleList {
     ResultData? response =
         await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-        response?.getData(), (json) => Articles.fromJson(json));
+        response?.getData() as Map<String, dynamic>,
+        (json) => Articles.fromJson(json as Map<String, dynamic>));
     if (kDebugMode) {
       print('articles:${articles.datas}');
     }
@@ -68,7 +71,8 @@ class ArticleList extends _$ArticleList {
     ResultData? response = await httpManager
         .netFetch(ApiAddress.articleUrl(pageNumber: currentPage++));
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-        response?.getData(), (json) => Articles.fromJson(json));
+        response?.getData() as Map<String, dynamic>,
+        (json) => Articles.fromJson(json as Map<String, dynamic>));
     currentPage = articles.curPage!;
     state = AsyncValue.data([...(state.value ?? []), ...?articles.datas]);
     // 通知 SliverAnimatedList 插入新项目

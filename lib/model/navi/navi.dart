@@ -6,7 +6,7 @@ part 'navi.freezed.dart';
 part 'navi.g.dart';
 
 @freezed
-class Navi with _$Navi {
+abstract class Navi with _$Navi {
   const factory Navi({
     required List<Article> articles,
     required int cid,

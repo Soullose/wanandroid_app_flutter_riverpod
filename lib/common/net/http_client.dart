@@ -45,16 +45,17 @@ class HttpManager extends _$HttpManager {
   static const contentTypeJson = "application/json";
   static const contentTypeForm = "application/x-www-form-urlencoded";
 
-  final dio = Dio()..httpClientAdapter = IOHttpClientAdapter(createHttpClient:() {
-    final HttpClient client = HttpClient();
-    client.badCertificateCallback= (cert, host, port) {
-      return true;
-    };
-    return client;
-  });
+  final dio = Dio()
+    ..httpClientAdapter = IOHttpClientAdapter(createHttpClient: () {
+      final HttpClient client = HttpClient();
+      client.badCertificateCallback = (cert, host, port) {
+        return true;
+      };
+      return client;
+    });
 
   Future<ResultData?> netFetch(
-    url, {
+    String url, {
     DioMethod method = DioMethod.get,
     Map<String, dynamic>? params,
     Object? data,
@@ -71,45 +72,47 @@ class HttpManager extends _$HttpManager {
       DioMethod.put: 'put',
       DioMethod.delete: 'delete',
       DioMethod.patch: 'patch',
-      DioMethod.head: 'head'
+      DioMethod.head: 'head',
     };
     options ??= Options(method: methodValues[method]);
-      // ..responseType = responseType;
     // print(options.headers);
 
-    // Response response;
+    resultError(DioException e) {
+      Response? errorResponse;
+      if (e.response != null) {
+        errorResponse = e.response;
+      } else {
+        errorResponse = Response(
+          statusCode: 999,
+          requestOptions: RequestOptions(path: url),
+        );
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        errorResponse!.statusCode = -2;
+      }
+      return ResultData(e.message, false, errorResponse!.statusCode);
+    }
+
+    Response response;
 
     try {
-      Response response = await dio.request(url,
-          queryParameters: params, data: data, options: options);
-      return response.data;
-      // return _handleResponse(response);
+      response = await dio.request(
+        url,
+        queryParameters: params,
+        data: data,
+        options: options,
+      );
     } on DioException catch (e) {
-      return _resultError(e, url);
-    } catch (e) {
-      return ResultData(e.toString(), false, -1);
+      return resultError(e);
     }
+    if (response.data is DioException) {
+      return resultError(response.data as DioException);
+    }
+
+    return response.data as ResultData?;
   }
 }
-
-ResultData _resultError(DioException e, String url) {
-  Response? errorResponse;
-  if (e.response != null) {
-    errorResponse = e.response;
-  } else {
-    errorResponse =
-        Response(statusCode: 999, requestOptions: RequestOptions(path: url));
-  }
-  if (e.type == DioExceptionType.connectionTimeout ||
-      e.type == DioExceptionType.receiveTimeout) {
-    errorResponse!.statusCode = -2;
-  }
-  return ResultData(e.message, false, errorResponse!.statusCode);
-}
-
-// ResultData _handleResponse(Response response) {
-//   return ResultData(response.data, true, response.statusCode);
-// }
 
 enum DioMethod {
   get,

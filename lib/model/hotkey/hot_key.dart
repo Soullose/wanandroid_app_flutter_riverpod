@@ -1,16 +1,17 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-part 'hot_key.freezed.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'hot_key.freezed.dart';
 part 'hot_key.g.dart';
 
-Hotkey hotkeyFromJson(String str) => Hotkey.fromJson(json.decode(str));
+Hotkey hotkeyFromJson(String str) =>
+    Hotkey.fromJson(json.decode(str) as Map<String, dynamic>);
 
 String hotkeyToJson(Hotkey data) => json.encode(data.toJson());
 
 @freezed
-class Hotkey with _$Hotkey {
+sealed class Hotkey with _$Hotkey {
   const factory Hotkey({
     required int id,
     required String link,

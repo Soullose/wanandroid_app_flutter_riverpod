@@ -7,17 +7,22 @@
 
 // part 'article_list.freezed.dart';
 // part 'article_list.g.dart';
+import 'dart:convert';
 
-part of '../models.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'article_list.freezed.dart';
+part 'article_list.g.dart';
 
 List<Articles> articlesFromJson(String str) =>
-    List<Articles>.from(json.decode(str).map((x) => Articles.fromJson(x)));
+    List<Articles>.from((json.decode(str) as List)
+        .map((x) => Articles.fromJson(x as Map<String, dynamic>)));
 
 String articlesToJson(List<Articles> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 @freezed
-class Articles with _$Articles {
+abstract class Articles with _$Articles {
   const factory Articles({
     bool? adminAdd,
     String? apkLink,
@@ -61,7 +66,7 @@ class Articles with _$Articles {
 }
 
 @freezed
-class Tag with _$Tag {
+abstract class Tag with _$Tag {
   const factory Tag({
     String? name,
     String? url,

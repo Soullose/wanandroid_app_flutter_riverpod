@@ -6,12 +6,12 @@ part 'article.freezed.dart';
 
 part 'article.g.dart';
 
-Article articleFromJson(String str) => Article.fromJson(json.decode(str));
-
-String articleToJson(Article data) => json.encode(data.toJson());
+// Article articleFromJson(String str) => Article.fromJson(json.decode(str));
+//
+// String articleToJson(Article data) => json.encode(data.toJson());
 
 @freezed
-class Article with _$Article {
+abstract class Article with _$Article {
   const factory Article({
     required bool adminAdd,
     required String apkLink,

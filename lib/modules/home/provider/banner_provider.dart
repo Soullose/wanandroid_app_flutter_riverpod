@@ -4,8 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/constants/api_address.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/http_client.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
-// import 'package:wanandroid_app_flutter_riverpod/common/utils/log_utils.dart';
-import 'package:wanandroid_app_flutter_riverpod/model/models.dart';
+import 'package:wanandroid_app_flutter_riverpod/model/article/banner/banner.dart';
 
 final bannerProvider = FutureProvider<List<Banner>>((ref) async {
   final httpManager = ref.read(httpManagerProvider.notifier);

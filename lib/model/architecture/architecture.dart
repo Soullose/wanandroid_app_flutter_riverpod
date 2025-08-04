@@ -9,14 +9,14 @@ part 'architecture.freezed.dart';
 
 part 'architecture.g.dart';
 
-Architecture architectureFromJson(String str) =>
-    Architecture.fromJson(json.decode(str));
-
-String architectureToJson(Architecture data) => json.encode(data.toJson());
+// Architecture architectureFromJson(String str) =>
+//     Architecture.fromJson(json.decode(str));
+//
+// String architectureToJson(Architecture data) => json.encode(data.toJson());
 
 /// 体系数据
 @freezed
-class Architecture with _$Architecture {
+abstract class Architecture with _$Architecture {
   const factory Architecture({
     required List<dynamic> articleList,
     required String author,

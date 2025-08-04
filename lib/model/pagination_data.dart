@@ -1,8 +1,11 @@
 // To parse this JSON data, do
 //
 //     final paginationData = paginationDataFromJson(jsonString);
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'dart:convert';
 
-part of 'models.dart';
+part 'pagination_data.g.dart';
+// part of 'models.dart';
 
 // PaginationData paginationDataFromJson(String str) =>
 //     PaginationData.fromJson(json.decode(str));
