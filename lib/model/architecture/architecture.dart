@@ -3,7 +3,6 @@
 //     final architecture = architectureFromJson(jsonString);
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
 
 part 'architecture.freezed.dart';
 
