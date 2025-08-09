@@ -17,7 +17,7 @@ part 'http_client.g.dart';
 @riverpod
 class HttpManager extends _$HttpManager {
   @override
-  FutureOr build() {
+  FutureOr<void> build() {
     dio.interceptors.add(HeaderInterceptors());
     dio.interceptors.add(CookieInterceptors(ref: ref));
     // dio.interceptors.add(TokenInterceptors(ref: ref));

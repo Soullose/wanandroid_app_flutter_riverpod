@@ -27,7 +27,7 @@ class AppThemeMode extends AutoDisposeAsyncNotifier<ThemeMode> {
     return ThemeMode.system;
   }
 
-  Future change(ThemeMode value) async {
+  Future<void> change(ThemeMode value) async {
     state = const AsyncValue.loading();
     state = AsyncValue.data(value);
   }
