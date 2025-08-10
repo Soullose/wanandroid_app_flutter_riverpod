@@ -2,12 +2,14 @@
 
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wanandroid_app_flutter_riverpod/src/rust/api/simple.dart';
+import 'package:wanandroid_app_flutter_riverpod/src/rust/api/sysinfo.dart';
 import 'package:wanandroid_app_flutter_riverpod/src/rust/frb_generated.dart';
 
 import 'common/router/app_router.dart';
@@ -21,7 +23,10 @@ Future<void> main() async {
   await RustLib.init();
   HttpOverrides.global = MyHttpOverrides();
   final prefs = await SharedPreferences.getInstance();
-  print('xxx:${greet(name: "Tom")}');
+  if (kDebugMode) {
+    print('xxx:${greet(name: "Tom")}');
+    print('xxx:${cpuArch()}');
+  }
   runApp(
     ProviderScope(
       observers: const [StateLogger()],
@@ -69,7 +74,6 @@ class MyApp extends ConsumerWidget {
     );
   }
 }
-
 
 // import 'package:flutter/material.dart';
 // import 'package:wanandroid_app_flutter_riverpod/src/rust/api/simple.dart';
