@@ -7,3 +7,7 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 String cpuArch() => RustLib.instance.api.crateApiSysinfoCpuArch();
+
+String systemName() => RustLib.instance.api.crateApiSysinfoSystemName();
+
+String longOsVersion() => RustLib.instance.api.crateApiSysinfoLongOsVersion();

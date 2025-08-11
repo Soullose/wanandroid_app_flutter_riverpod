@@ -24,8 +24,10 @@ Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   final prefs = await SharedPreferences.getInstance();
   if (kDebugMode) {
-    print('xxx:${greet(name: "Tom")}');
-    print('xxx:${cpuArch()}');
+    print('greet:${greet(name: "Tom")}');
+    print('cpuArch:${cpuArch()}');
+    print('systemName:${systemName()}');
+    print('longOsVersion:${longOsVersion()}');
   }
   runApp(
     ProviderScope(
