@@ -73,7 +73,7 @@ dependencies:
 
   # Used for surface colored branded theming. (by rydmike.com)
   # https://pub.dev/packages/flex_color_scheme
-  flex_color_scheme: ^8.2.0
+  flex_color_scheme: ^8.3.0
 
   freezed: ^3.0.6
   # https://pub.dev/packages/freezed_annotation
