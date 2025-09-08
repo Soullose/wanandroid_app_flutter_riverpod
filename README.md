@@ -19,3 +19,5 @@ samples, guidance on mobile development, and a full API reference.
 ```shell
 flutter_rust_bridge_codegen generate --watch
 ```
+### 结构调整
+![结构调整](Screenshot_20250726_193056_com.tencent.mm.jpg)
