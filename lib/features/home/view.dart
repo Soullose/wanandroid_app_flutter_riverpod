@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
+import 'package:wanandroid_app_flutter_riverpod/features/home/provider/banner_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/model/article/article_list.dart';
-import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/article_list_provider.dart';
-import 'package:wanandroid_app_flutter_riverpod/modules/home/provider/banner_provider.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({

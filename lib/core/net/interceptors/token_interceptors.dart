@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../storage/basic_storage_provider.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/services/storage/basic_storage_provider.dart';
 
 class TokenInterceptors extends QueuedInterceptorsWrapper {
   TokenInterceptors({required this.ref});

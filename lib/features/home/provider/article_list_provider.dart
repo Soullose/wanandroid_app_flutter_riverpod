@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wanandroid_app_flutter_riverpod/common/constants/api_address.dart';
-import 'package:wanandroid_app_flutter_riverpod/common/net/http_client.dart';
-import 'package:wanandroid_app_flutter_riverpod/common/net/result_data.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/constants/api_address.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/net/http_client.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/net/result_data.dart';
 import 'package:wanandroid_app_flutter_riverpod/model/article/article_list.dart';
 import 'package:wanandroid_app_flutter_riverpod/model/pagination_data.dart';
 

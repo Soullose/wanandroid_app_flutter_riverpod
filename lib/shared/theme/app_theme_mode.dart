@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../storage/shared_preferences_provider.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/services/storage/shared_preferences_provider.dart';
 
 class AppThemeMode extends AutoDisposeAsyncNotifier<ThemeMode> {
   late SharedPreferences sharedPreferences;

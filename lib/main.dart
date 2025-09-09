@@ -13,10 +13,10 @@ import 'package:wanandroid_app_flutter_riverpod/src/rust/api/sysinfo.dart';
 import 'package:wanandroid_app_flutter_riverpod/src/rust/frb_generated.dart';
 
 import 'common/router/app_router.dart';
-import 'common/storage/shared_preferences_provider.dart';
-import 'common/theme/app_theme.dart';
-import 'common/theme/app_theme_mode.dart';
-import 'common/utils/state_logger/state_logger.dart';
+import 'core/services/storage/shared_preferences_provider.dart';
+import 'shared/theme/app_theme.dart';
+import 'shared/theme/app_theme_mode.dart';
+import 'shared/utils/state_logger/state_logger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

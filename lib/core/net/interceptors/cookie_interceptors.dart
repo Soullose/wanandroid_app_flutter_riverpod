@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../storage/basic_storage_provider.dart';
-import '../../utils/log_utils.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/services/storage/basic_storage_provider.dart';
+import 'package:wanandroid_app_flutter_riverpod/shared/utils/log_utils.dart';
 
 class CookieInterceptors extends QueuedInterceptorsWrapper {
   CookieInterceptors({required this.ref});

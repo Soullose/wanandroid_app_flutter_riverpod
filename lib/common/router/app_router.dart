@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../modules/home/view.dart';
-import '../../modules/main_wrapper/view.dart';
-import '../../modules/navi/view.dart';
-import '../../modules/profile/view.dart';
-import '../../modules/question_and_answers/view.dart';
-import '../../modules/sign_in/view.dart';
-import '../../modules/sign_up/view.dart';
-import '../../modules/welcome/view.dart';
+import '../../features//home/view.dart';
+import '../../features/main_wrapper/view.dart';
+import '../../features/navi/view.dart';
+import '../../features/profile/view.dart';
+import '../../features/question_and_answers/view.dart';
+import '../../features/sign_in/view.dart';
+import '../../features/sign_up/view.dart';
+import '../../features/welcome/view.dart';
 import 'router_notifier.dart';
 import 'router_path.dart';
 
