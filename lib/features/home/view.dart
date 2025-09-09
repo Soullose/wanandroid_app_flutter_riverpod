@@ -1,8 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wanandroid_app_flutter_riverpod/features/banner/presentation/providers/banner_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/model/article/article_list.dart';
 
@@ -15,9 +13,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bannerFutureProvider = ref.watch(bannerProvider);
     final articleState = ref.watch(articleListProvider);
-    final carouselController = CarouselSliderController();
     final articleListNotifierProvider = ref.read(articleListProvider.notifier);
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final ScrollController scrollController = ScrollController();
