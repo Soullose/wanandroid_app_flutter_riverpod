@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/constants/api_address.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/net/http_client.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/net/result_data.dart';
-import 'package:wanandroid_app_flutter_riverpod/model/article/article_list.dart';
+import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
 import 'package:wanandroid_app_flutter_riverpod/model/pagination_data.dart';
 
 part 'article_list_provider.g.dart';

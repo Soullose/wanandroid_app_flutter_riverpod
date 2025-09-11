@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
-import 'package:wanandroid_app_flutter_riverpod/model/article/article_list.dart';
+import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
 
 import '../banner/presentation/screens/banner_screen.dart';
 
