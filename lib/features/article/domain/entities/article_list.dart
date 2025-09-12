@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'article_list.freezed.dart';
+
 part 'article_list.g.dart';
 
 List<Articles> articlesFromJson(String str) =>

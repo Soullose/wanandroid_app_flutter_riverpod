@@ -39,8 +39,7 @@ class ArticleRepositoryImpl implements ArticleRepository {
     if (kDebugMode) {
       print('articles:${articles.datas}');
     }
-    // TODO: implement getDefaultArticles
-    throw UnimplementedError();
+    return articles.datas ??  [];
   }
 
   @override
