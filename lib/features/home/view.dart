@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
 
+import '../article/presentation/providers/articles_provider.dart' hide Articles;
 import '../banner/presentation/screens/banner_screen.dart';
 
 class HomePage extends ConsumerWidget {
@@ -13,11 +14,15 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleState = ref.watch(articleListProvider);
-    final articleListNotifierProvider = ref.read(articleListProvider.notifier);
+    final GlobalKey<SliverAnimatedListState> _listKey =
+    GlobalKey<SliverAnimatedListState>();
+    // final articleState = ref.watch(articleListProvider);
+    // final articleListNotifierProvider = ref.read(articleListProvider.notifier);
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final ScrollController scrollController = ScrollController();
-    final listKey = articleListNotifierProvider.animatedListKey;
+    // final listKey = articleListNotifierProvider.animatedListKey;
+    final articleNotifierProvider = ref.read(articlesProvider.notifier);
+    final articleState = ref.watch(articlesProvider);
     // 处理滚动通知
     bool handleScrollNotification(ScrollNotification notification) {
       // 记录滚动信息
@@ -67,7 +72,8 @@ class HomePage extends ConsumerWidget {
           if (kDebugMode) {
             print('加载更多数据');
           }
-          articleListNotifierProvider.fetchNewArticles();
+          // articleListNotifierProvider.fetchNewArticles();
+          articleNotifierProvider.loadMore();
         }
       }
 
@@ -122,7 +128,7 @@ class HomePage extends ConsumerWidget {
                   builder: (_, WidgetRef ref, __) => articleState.when(
                     data: (data) {
                       // EasyLoading.dismiss();
-                      final List<Articles> list = data;
+                      final List<Articles> list = data.articles;
                       if (kDebugMode) {
                         print('长度:${list.length}');
                       }
@@ -130,7 +136,7 @@ class HomePage extends ConsumerWidget {
                         return const SliverToBoxAdapter(child: Text('空'));
                       }
                       return SliverAnimatedList(
-                        key: listKey,
+                        key: _listKey,
                         initialItemCount: list.length,
                         itemBuilder: (context, index, animation) {
                           final Articles article = list[index];

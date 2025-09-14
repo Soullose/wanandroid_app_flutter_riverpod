@@ -9,8 +9,8 @@ part 'articles_provider.g.dart';
 @riverpod
 class Articles extends _$Articles {
   @override
-  FutureOr<ArticleState> build() async {
-    return await _fetchArticles(0);
+  FutureOr<ArticleState> build() {
+    return _fetchArticles(0);
   }
 
   Future<ArticleState> _fetchArticles(int page) async {

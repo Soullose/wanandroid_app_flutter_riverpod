@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/constants/api_address.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/net/http_client.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/net/result_data.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
+import 'package:wanandroid_app_flutter_riverpod/features/article/domain/repositories/article_repository.dart';
+import 'package:wanandroid_app_flutter_riverpod/model/pagination_data.dart';
 
-import '../../../../core/constants/api_address.dart';
-import '../../../../core/net/http_client.dart';
-import '../../../../core/net/result_data.dart';
-import '../../../../model/pagination_data.dart';
-import '../../domain/repositories/article_repository.dart';
+
 
 class ArticleRepositoryImpl implements ArticleRepository {
   final Ref _ref;
@@ -24,8 +25,7 @@ class ArticleRepositoryImpl implements ArticleRepository {
     if (kDebugMode) {
       print('articles:${articles.datas}');
     }
-    // TODO: implement getArticles
-    throw UnimplementedError();
+    return articles.datas ??  [];
   }
 
   @override
@@ -37,7 +37,7 @@ class ArticleRepositoryImpl implements ArticleRepository {
         response?.getData() as Map<String, dynamic>,
         (json) => Articles.fromJson(json as Map<String, dynamic>));
     if (kDebugMode) {
-      print('articles:${articles.datas}');
+      print('articles:${articles.datas!.length}');
     }
     return articles.datas ??  [];
   }
@@ -52,7 +52,6 @@ class ArticleRepositoryImpl implements ArticleRepository {
     if (kDebugMode) {
       print('articles:${articles.datas}');
     }
-    // TODO: implement getTopArticles
-    throw UnimplementedError();
+    return articles.datas ??  [];
   }
 }
