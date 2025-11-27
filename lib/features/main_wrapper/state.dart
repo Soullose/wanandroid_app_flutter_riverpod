@@ -1,4 +1,4 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 class MainWrapper extends StateNotifier<int> {
   MainWrapper() : super(0);
@@ -14,5 +14,6 @@ class MainWrapper extends StateNotifier<int> {
 }
 
 // riverpod中MainWrapper的StateNotifierProvider
-final mainWrapperProvider =
-    StateNotifierProvider<MainWrapper, int>((ref) => MainWrapper());
+final mainWrapperProvider = StateNotifierProvider<MainWrapper, int>(
+  (ref) => MainWrapper(),
+);

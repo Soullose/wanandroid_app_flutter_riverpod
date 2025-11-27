@@ -13,7 +13,7 @@ class RouterNotifier extends _$RouterNotifier implements Listenable {
   VoidCallback? routerListener;
 
   @override
-  FutureOr<void> build() {
+  Future<void> build() async {
     listenSelf((previous, next) {
       if (state.isLoading) return;
       routerListener?.call();

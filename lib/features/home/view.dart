@@ -1,21 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
+import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
 
 import '../article/presentation/providers/articles_provider.dart' hide Articles;
 import '../banner/presentation/screens/banner_screen.dart';
 
 class HomePage extends ConsumerWidget {
-  const HomePage({
-    super.key,
-  });
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final GlobalKey<SliverAnimatedListState> _listKey =
-    GlobalKey<SliverAnimatedListState>();
+        GlobalKey<SliverAnimatedListState>();
     // final articleState = ref.watch(articleListProvider);
     // final articleListNotifierProvider = ref.read(articleListProvider.notifier);
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
@@ -34,7 +32,6 @@ class HomePage extends ConsumerWidget {
       if (notification is ScrollStartNotification) {
         // debugPrint('开始滚动');
       }
-
       // 滚动过程中
       else if (notification is ScrollUpdateNotification) {
         ScrollMetrics metrics = notification.metrics;
@@ -51,8 +48,9 @@ class HomePage extends ConsumerWidget {
         }
 
         // 计算滚动百分比
-        final maxScrollExtent =
-            metrics.maxScrollExtent > 0 ? metrics.maxScrollExtent : 1;
+        final maxScrollExtent = metrics.maxScrollExtent > 0
+            ? metrics.maxScrollExtent
+            : 1;
         final scrollPercentage = metrics.pixels / maxScrollExtent;
         // debugPrint('滚动百分比: ${(scrollPercentage * 100).toStringAsFixed(2)}%');
 
@@ -63,7 +61,6 @@ class HomePage extends ConsumerWidget {
           // articleListNotifierProvider.fetchNewArticles();
         }
       }
-
       // 滚动结束
       else if (notification is ScrollEndNotification) {
         // debugPrint('结束滚动，最终位置: $scrollDistance');
@@ -76,7 +73,6 @@ class HomePage extends ConsumerWidget {
           articleNotifierProvider.loadMore();
         }
       }
-
       // 处理过度滚动
       else if (notification is OverscrollNotification) {
         // debugPrint('过度滚动: ${notification.overscroll}');
@@ -103,81 +99,82 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       body: NotificationListener(
-          onNotification: (ScrollNotification notification) {
-            return handleScrollNotification(notification);
-          },
-          child: RefreshIndicator(
-            onRefresh: () => ref.refresh(articleListProvider.future),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                SliverAppBar(
-                  title: Text('首页'),
-                  backgroundColor: ColorScheme.of(context).inversePrimary,
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        // Navigator.pushNamed(context, '/search');
-                      },
-                    ),
-                  ],
-                ),
-                BannerScreen(),
-                Consumer(
-                  builder: (_, WidgetRef ref, __) => articleState.when(
-                    data: (data) {
-                      // EasyLoading.dismiss();
-                      final List<Articles> list = data.articles;
-                      if (kDebugMode) {
-                        print('长度:${list.length}');
-                      }
-                      if (list.isEmpty) {
-                        return const SliverToBoxAdapter(child: Text('空'));
-                      }
-                      return SliverAnimatedList(
-                        key: _listKey,
-                        initialItemCount: list.length,
-                        itemBuilder: (context, index, animation) {
-                          final Articles article = list[index];
-                          return ArticleCard(
-                            article: article,
-                            index: index,
-                            isVisible: true,
-                          );
-                        },
-                      );
-
-                      //   SliverList(
-                      //   delegate: SliverChildBuilderDelegate(
-                      //     (_, int index) {
-                      //       final Articles article = list[index];
-                      //       // widget.header
-                      //       return ArticleCard(
-                      //         article: article,
-                      //         index: index,
-                      //         isVisible: true,
-                      //       );
-                      //     },
-                      //     childCount: list.length,
-                      //   ),
-                      // );
-                    },
-                    error: (err, stack) {
-                      // EasyLoading.dismiss();
-                      return SliverToBoxAdapter(child: Text('Error: $err'));
-                    },
-                    loading: () {
-                      // EasyLoading.instance.indicatorType =
-                      //     EasyLoadingIndicatorType.cubeGrid;
-                      // EasyLoading.show();
-                      return const SliverToBoxAdapter();
+        onNotification: (ScrollNotification notification) {
+          return handleScrollNotification(notification);
+        },
+        child: RefreshIndicator(
+          onRefresh: () => ref.refresh(articleListProvider.future),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: <Widget>[
+              SliverAppBar(
+                title: Text('首页'),
+                backgroundColor: ColorScheme.of(context).inversePrimary,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      // Navigator.pushNamed(context, '/search');
                     },
                   ),
-                ),
-              ],
-            ),
-          )),
+                ],
+              ),
+              BannerScreen(),
+              Consumer(
+                builder: (_, WidgetRef ref, __) => articleState.when(
+                  data: (data) {
+                    // EasyLoading.dismiss();
+                    final List<Articles> list = data.articles;
+                    if (kDebugMode) {
+                      print('长度:${list.length}');
+                    }
+                    if (list.isEmpty) {
+                      return const SliverToBoxAdapter(child: Text('空'));
+                    }
+                    return SliverAnimatedList(
+                      key: _listKey,
+                      initialItemCount: list.length,
+                      itemBuilder: (context, index, animation) {
+                        final Articles article = list[index];
+                        return ArticleCard(
+                          article: article,
+                          index: index,
+                          isVisible: true,
+                        );
+                      },
+                    );
+
+                    //   SliverList(
+                        //   delegate: SliverChildBuilderDelegate(
+                        //     (_, int index) {
+                        //       final Articles article = list[index];
+                        //       // widget.header
+                        //       return ArticleCard(
+                        //         article: article,
+                        //         index: index,
+                        //         isVisible: true,
+                        //       );
+                        //     },
+                        //     childCount: list.length,
+                        //   ),
+                        // );
+                      },
+                      error: (err, stack) {
+                        // EasyLoading.dismiss();
+                        return SliverToBoxAdapter(child: Text('Error: $err'));
+                      },
+                      loading: () {
+                        // EasyLoading.instance.indicatorType =
+                        //     EasyLoadingIndicatorType.cubeGrid;
+                        // EasyLoading.show();
+                        return const SliverToBoxAdapter();
+                      },
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ),
       floatingActionButton: ref.watch(showFabProvider)
           ? FloatingActionButton(
               child: const Icon(Icons.arrow_upward),
@@ -221,32 +218,22 @@ class _ArticleCardState extends State<ArticleCard>
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
-      tween: Tween<double>(
-        begin: 0.0,
-        end: widget.isVisible ? 1.0 : 0.0,
-      ),
+      tween: Tween<double>(begin: 0.0, end: widget.isVisible ? 1.0 : 0.0),
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
       builder: (context, value, child) {
         return Transform.translate(
           offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: child,
-          ),
+          child: Opacity(opacity: value, child: child),
         );
       },
-      child: _BuildCard(
-        widget: widget,
-      ),
+      child: _BuildCard(widget: widget),
     );
   }
 }
 
 class _BuildCard extends StatelessWidget {
-  const _BuildCard({
-    required this.widget,
-  });
+  const _BuildCard({required this.widget});
 
   final ArticleCard widget;
 
@@ -286,9 +273,9 @@ class _BuildCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .primaryColor
-                              .withValues(alpha: 0.1),
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -350,8 +337,8 @@ class _BuildCard extends StatelessWidget {
                   Text(
                     widget.article.title!,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -361,9 +348,9 @@ class _BuildCard extends StatelessWidget {
                       if (widget.article.author!.isNotEmpty) ...[
                         CircleAvatar(
                           radius: 12,
-                          backgroundColor: Theme.of(context)
-                              .primaryColor
-                              .withValues(alpha: 0.1),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).primaryColor.withValues(alpha: 0.1),
                           child: Text(
                             widget.article.author![0].toUpperCase(),
                             style: TextStyle(
@@ -381,9 +368,9 @@ class _BuildCard extends StatelessWidget {
                       ] else if (widget.article.shareUser!.isNotEmpty) ...[
                         CircleAvatar(
                           radius: 12,
-                          backgroundColor: Theme.of(context)
-                              .primaryColor
-                              .withValues(alpha: 0.1),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).primaryColor.withValues(alpha: 0.1),
                           child: Text(
                             widget.article.shareUser![0].toUpperCase(),
                             style: TextStyle(

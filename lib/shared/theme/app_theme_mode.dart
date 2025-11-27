@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/services/storage/shared_preferences_provider.dart';
 
-class AppThemeMode extends AutoDisposeAsyncNotifier<ThemeMode> {
+class AppThemeMode extends AsyncNotifier<ThemeMode> {
   late SharedPreferences sharedPreferences;
 
   @override
@@ -27,7 +26,7 @@ class AppThemeMode extends AutoDisposeAsyncNotifier<ThemeMode> {
   }
 
   Future<void> change(ThemeMode value) async {
-    state = const AsyncValue.loading();
+    state = AsyncValue.loading();
     state = AsyncValue.data(value);
   }
 
@@ -50,6 +49,6 @@ class AppThemeMode extends AutoDisposeAsyncNotifier<ThemeMode> {
 }
 
 //
-final themeModeProvider =
-    AutoDisposeAsyncNotifierProvider<AppThemeMode, ThemeMode>(
-        () => AppThemeMode());
+final themeModeProvider = AsyncNotifierProvider<AppThemeMode, ThemeMode>(
+  () => AppThemeMode(),
+);

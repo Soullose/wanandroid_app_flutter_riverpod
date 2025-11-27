@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../features//home/view.dart';
 import '../../features/main_wrapper/view.dart';
@@ -19,8 +19,8 @@ final GlobalKey<NavigatorState> _rootKey =
 final GlobalKey<NavigatorState> _shellNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellKey');
 
-final routerProvider = Provider.autoDispose<GoRouter>((ref) {
-  final notifier = ref.watch(routerNotifierProvider.notifier);
+final appRouterProvider = Provider.autoDispose<GoRouter>((ref) {
+  final notifier = ref.watch(routerProvider.notifier);
 
   return GoRouter(
     navigatorKey: _rootKey,

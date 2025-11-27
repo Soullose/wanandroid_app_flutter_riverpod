@@ -17,7 +17,7 @@ part 'http_client.g.dart';
 @riverpod
 class HttpManager extends _$HttpManager {
   @override
-  FutureOr<void> build() {
+  Future<void> build() async {
     dio.interceptors.add(HeaderInterceptors());
     dio.interceptors.add(CookieInterceptors(ref: ref));
     // dio.interceptors.add(TokenInterceptors(ref: ref));
@@ -46,13 +46,15 @@ class HttpManager extends _$HttpManager {
   static const contentTypeForm = "application/x-www-form-urlencoded";
 
   final dio = Dio()
-    ..httpClientAdapter = IOHttpClientAdapter(createHttpClient: () {
-      final HttpClient client = HttpClient();
-      client.badCertificateCallback = (cert, host, port) {
-        return true;
-      };
-      return client;
-    });
+    ..httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final HttpClient client = HttpClient();
+        client.badCertificateCallback = (cert, host, port) {
+          return true;
+        };
+        return client;
+      },
+    );
 
   Future<ResultData?> netFetch(
     String url, {
@@ -114,11 +116,4 @@ class HttpManager extends _$HttpManager {
   }
 }
 
-enum DioMethod {
-  get,
-  post,
-  put,
-  delete,
-  patch,
-  head,
-}
+enum DioMethod { get, post, put, delete, patch, head }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/api_address.dart';
 import '../../../../core/net/http_client.dart';

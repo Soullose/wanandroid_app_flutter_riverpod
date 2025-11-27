@@ -1,4 +1,4 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'shared_preferences_provider.dart';
@@ -41,7 +41,7 @@ class Cookie extends _$Cookie {
     return cookie;
   }
 
-  void updateCookie (List<String> cookie) {
+  void updateCookie(List<String> cookie) {
     state = cookie;
   }
 }
@@ -58,16 +58,18 @@ class Token extends _$Token {
     return token;
   }
 
-  void updateToken (String token) {
+  void updateToken(String token) {
     state = token;
   }
 }
 
 final serveAddress = StateProvider<String>(
-    (ref) => "http://${ref.watch(ipAddressProvider)}:8080");
+  (ref) => "http://${ref.watch(ipAddressProvider)}:8080",
+);
 
-final mqttAddress =
-    StateProvider<String>((ref) => ref.watch(ipAddressProvider));
+final mqttAddress = StateProvider<String>(
+  (ref) => ref.watch(ipAddressProvider),
+);
 
 // final ipAddressProvider = StateProvider<String>((ref) {
 //   final preferences = ref.watch(sharedPreferencesProvider);

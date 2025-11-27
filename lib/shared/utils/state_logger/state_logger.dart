@@ -1,24 +1,25 @@
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Useful to log state change in our application
 /// Read the logs and you'll better understand what's going on under the hood
-class StateLogger extends ProviderObserver {
-  const StateLogger();
+final class StateLogger extends ProviderObserver {
+  StateLogger();
 
   @override
-  Future<void> didUpdateProvider(
-    ProviderBase provider,
+  void didUpdateProvider(
+    ProviderObserverContext context,
     Object? previousValue,
     Object? newValue,
-    ProviderContainer container,
   ) async {
     if (kDebugMode) {
-      print('PROVIDER    : ${provider.name ?? '<NO NAME>'}\n'
-          '  Type      : ${provider.runtimeType}\n'
-          '  Old value : $previousValue\n'
-          '  New value : $newValue');
+      print(
+        'PROVIDER    : ${context.provider ?? '<NO NAME>'}\n'
+        '  Type      : ${context.provider.runtimeType}\n'
+        '  Old value : $previousValue\n'
+        '  New value : $newValue',
+      );
     }
-    super.didUpdateProvider(provider, previousValue, newValue, container);
+    // super.didUpdateProvider(context, previousValue, newValue);
   }
 }

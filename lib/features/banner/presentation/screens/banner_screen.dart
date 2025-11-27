@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/banner/presentation/providers/banner_provider.dart';
 
 class BannerScreen extends ConsumerStatefulWidget {
@@ -39,29 +39,30 @@ class _BannerScreenState extends ConsumerState<BannerScreen> {
               return CarouselSlider(
                 carouselController: carouselController,
                 items: data
-                    .map((e) => Center(
-                          child: CachedNetworkImage(
-                            imageUrl: e.imagePath,
-                          ),
+                    .map(
+                      (e) => Center(
+                        child: CachedNetworkImage(imageUrl: e.imagePath),
 
-                          // Image.network(
-                          //   e.imagePath!,
-                          //   fit: BoxFit.cover,
-                          //   width: double.infinity,
-                          //   // width: 1000,
-                          // ),
-                        ))
+                        // Image.network(
+                        //   e.imagePath!,
+                        //   fit: BoxFit.cover,
+                        //   width: double.infinity,
+                        //   // width: 1000,
+                        // ),
+                      ),
+                    )
                     .toList(),
                 options: CarouselOptions(
-                    scrollPhysics: const BouncingScrollPhysics(),
-                    autoPlay: true,
-                    aspectRatio: 2,
-                    viewportFraction: 1,
-                    onPageChanged: (index, reason) {
-                      // if (kDebugMode) {
-                      //   print('----:$index');
-                      // }
-                    }), //height: 190.0
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  autoPlay: true,
+                  aspectRatio: 2,
+                  viewportFraction: 1,
+                  onPageChanged: (index, reason) {
+                    // if (kDebugMode) {
+                    //   print('----:$index');
+                    // }
+                  },
+                ), //height: 190.0
               );
             },
           ),

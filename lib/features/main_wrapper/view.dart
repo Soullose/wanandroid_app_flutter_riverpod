@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MainWrapperPage extends ConsumerWidget {
-  const MainWrapperPage({
-    required this.navigationShell,
-    super.key,
-  });
+  const MainWrapperPage({required this.navigationShell, super.key});
 
   /// The navigation shell and container for the branch Navigators.
   final StatefulNavigationShell navigationShell;
@@ -23,8 +20,10 @@ class MainWrapperPage extends ConsumerWidget {
         ],
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (int index) {
-          return navigationShell.goBranch(index,
-              initialLocation: navigationShell.currentIndex == index);
+          return navigationShell.goBranch(
+            index,
+            initialLocation: navigationShell.currentIndex == index,
+          );
         },
         animationDuration: const Duration(milliseconds: 1000),
       ),

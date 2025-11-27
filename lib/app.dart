@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme_mode.dart';
 
@@ -17,7 +17,7 @@ class App extends ConsumerStatefulWidget {
 class _AppState extends ConsumerState<App> {
   @override
   Widget build(BuildContext context) {
-    final router = ref.watch(routerProvider);
+    final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeProvider);
     return ScreenUtilInit(
       designSize: const Size(360, 690),
