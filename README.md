@@ -21,13 +21,23 @@ samples, guidance on mobile development, and a full API reference.
 dart run build_runner watch
 dart run build_runner build
 ```
+
 ## frb gen
 ```shell
 flutter_rust_bridge_codegen generate --watch
 ```
 
-##打包命令
+## 更新包历史
+```shell
+flutter pub downgrade
+```
 
+## 格式化
+```shell
+dart format .
+```
+
+## 打包命令
 ```shell
 flutter build apk --release --target-platform android-arm,android-arm64,android-x64 --split-per-abi
 ```
