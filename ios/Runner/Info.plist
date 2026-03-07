@@ -45,6 +45,9 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<!-- 支持iPad ProMotion 120Hz刷新率 -->
+	<key>PreferredFrameRateRange</key>
+	<string>120</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
