@@ -16,7 +16,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GlobalKey<SliverAnimatedListState> _listKey =
+    final GlobalKey<SliverAnimatedListState> listKey =
         GlobalKey<SliverAnimatedListState>();
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final ScrollController scrollController = ScrollController();
@@ -78,7 +78,7 @@ class HomePage extends ConsumerWidget {
         context,
         ref,
         scrollController,
-        _listKey,
+        listKey,
         articleState,
         handleScrollNotification,
         articleNotifierProvider,
@@ -88,7 +88,7 @@ class HomePage extends ConsumerWidget {
         context,
         ref,
         scrollController,
-        _listKey,
+        listKey,
         articleState,
         handleScrollNotification,
         articleNotifierProvider,
@@ -99,7 +99,7 @@ class HomePage extends ConsumerWidget {
         context,
         ref,
         scrollController,
-        _listKey,
+        listKey,
         articleState,
         handleScrollNotification,
         articleNotifierProvider,
@@ -144,7 +144,7 @@ class HomePage extends ConsumerWidget {
               ),
               const BannerScreen(),
               Consumer(
-                builder: (_, WidgetRef ref, __) => articleState.when(
+                builder: (_, WidgetRef ref, _) => articleState.when(
                   data: (ArticleState data) {
                     final List<Articles> list = data.articles;
                     if (kDebugMode) {
@@ -239,7 +239,7 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
               Consumer(
-                builder: (_, WidgetRef ref, __) => articleState.when(
+                builder: (_, WidgetRef ref, _) => articleState.when(
                   data: (ArticleState data) {
                     final List<Articles> list = data.articles;
                     if (kDebugMode) {

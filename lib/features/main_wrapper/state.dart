@@ -7,7 +7,7 @@ class MainWrapper extends StateNotifier<int> {
   set _index(int value) => state = value;
 
   //get
-  get current => state;
+  int get current => state;
 
   //bottomNavigationBar选择哪个页面时将pageNumber赋值给状态管理器
   void select(int value) => _index = value;
