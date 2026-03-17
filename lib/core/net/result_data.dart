@@ -1,10 +1,8 @@
-
-
 class ResultData {
-  var data;
+  dynamic data;
   bool result;
   int? code;
-  var headers;
+  Map<String, String>? headers;
 
   ResultData(this.data, this.result, this.code, {this.headers});
 }

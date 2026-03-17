@@ -8,7 +8,9 @@ import '../result_data.dart';
 class ResponseInterceptors extends InterceptorsWrapper {
   @override
   void onResponse(
-      Response<dynamic> response, ResponseInterceptorHandler handler) {
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     RequestOptions option = response.requestOptions;
 
     late ResultData value;
@@ -19,8 +21,14 @@ class ResponseInterceptors extends InterceptorsWrapper {
         value = ResultData(response.data, true, response.statusCode);
       } else if (response.statusCode! >= HttpStatus.ok &&
           response.statusCode! < HttpStatus.multipleChoices) {
-        value = ResultData(response.data, true, response.statusCode,
-            headers: response.headers);
+        value = ResultData(
+          response.data,
+          true,
+          response.statusCode,
+          headers: response.headers.map.map(
+            (key, value) => MapEntry(key, value.join(',')),
+          ),
+        );
       } else {}
     } catch (e) {
       if (kDebugMode) {

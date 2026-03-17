@@ -13,8 +13,8 @@ final class StateLogger extends ProviderObserver {
     Object? newValue,
   ) async {
     if (kDebugMode) {
-      print(
-        'PROVIDER    : ${context.provider ?? '<NO NAME>'}\n'
+      debugPrint(
+        'PROVIDER    : ${context.provider.name ?? '<NO NAME>'}\n'
         '  Type      : ${context.provider.runtimeType}\n'
         '  Old value : $previousValue\n'
         '  New value : $newValue',

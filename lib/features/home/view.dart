@@ -4,93 +4,90 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_state.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/home/provider/article_list_provider.dart';
-import 'package:wanandroid_app_flutter_riverpod/shared/utils/responsive/responsive_helper.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/widgets/responsive/responsive_builder.dart';
 
 import '../article/presentation/providers/articles_provider.dart'
     as article_provider;
 import '../banner/presentation/screens/banner_screen.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final GlobalKey<SliverAnimatedListState> listKey =
-        GlobalKey<SliverAnimatedListState>();
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  final GlobalKey<SliverAnimatedListState> _listKey =
+      GlobalKey<SliverAnimatedListState>();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final currentOffset = _scrollController.offset;
     final showFabNotifierProvider = ref.read(showFabProvider.notifier);
-    final ScrollController scrollController = ScrollController();
+    if (currentOffset > 300) {
+      showFabNotifierProvider.enableFab();
+    } else {
+      showFabNotifierProvider.disableFab();
+    }
+  }
+
+  // 处理滚动通知
+  bool _handleScrollNotification(ScrollNotification notification) {
+    final articleNotifierProvider = ref.read(
+      article_provider.articlesProvider.notifier,
+    );
+
+    if (notification is ScrollEndNotification) {
+      if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
+        if (kDebugMode) {
+          debugPrint('加载更多数据');
+        }
+        articleNotifierProvider.loadMore();
+      }
+    }
+
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final showFabNotifierProvider = ref.read(showFabProvider.notifier);
     final articleNotifierProvider = ref.read(
       article_provider.articlesProvider.notifier,
     );
     final articleState = ref.watch(article_provider.articlesProvider);
 
-    // 处理滚动通知
-    bool handleScrollNotification(ScrollNotification notification) {
-      if (notification is ScrollStartNotification) {
-        // debugPrint('开始滚动');
-      } else if (notification is ScrollUpdateNotification) {
-        ScrollMetrics metrics = notification.metrics;
-        double scrollDelta = notification.scrollDelta!;
-        double scrollDistance = metrics.pixels;
-
-        if (scrollDelta > 0) {
-          // debugPrint('向下滚动: $scrollDelta');
-        } else if (scrollDelta < 0) {
-          // debugPrint('向上滚动: $scrollDelta');
-        }
-
-        final maxScrollExtent = metrics.maxScrollExtent > 0
-            ? metrics.maxScrollExtent
-            : 1;
-        final scrollPercentage = metrics.pixels / maxScrollExtent;
-
-        bool isNearBottom = metrics.pixels >= metrics.maxScrollExtent - 100;
-        if (isNearBottom) {
-          // debugPrint('接近底部，可以加载更多数据');
-        }
-      } else if (notification is ScrollEndNotification) {
-        if (notification.metrics.pixels >=
-            notification.metrics.maxScrollExtent) {
-          if (kDebugMode) {
-            print('加载更多数据');
-          }
-          articleNotifierProvider.loadMore();
-        }
-      } else if (notification is OverscrollNotification) {
-        // debugPrint('过度滚动: ${notification.overscroll}');
-      }
-
-      return true;
-    }
-
-    scrollController.addListener(() {
-      final currentOffset = scrollController.offset;
-      if (currentOffset > 300) {
-        showFabNotifierProvider.enableFab();
-      } else {
-        showFabNotifierProvider.disableFab();
-      }
-    });
-
     return ResponsiveBuilder(
       mobile: _buildMobileLayout(
         context,
         ref,
-        scrollController,
-        listKey,
+        _scrollController,
+        _listKey,
         articleState,
-        handleScrollNotification,
+        _handleScrollNotification,
         articleNotifierProvider,
         showFabNotifierProvider,
       ),
       smallTablet: _buildTabletLayout(
         context,
         ref,
-        scrollController,
-        listKey,
+        _scrollController,
+        _listKey,
         articleState,
-        handleScrollNotification,
+        _handleScrollNotification,
         articleNotifierProvider,
         showFabNotifierProvider,
         crossAxisCount: 2,
@@ -98,10 +95,10 @@ class HomePage extends ConsumerWidget {
       largeTablet: _buildTabletLayout(
         context,
         ref,
-        scrollController,
-        listKey,
+        _scrollController,
+        _listKey,
         articleState,
-        handleScrollNotification,
+        _handleScrollNotification,
         articleNotifierProvider,
         showFabNotifierProvider,
         crossAxisCount: 3,

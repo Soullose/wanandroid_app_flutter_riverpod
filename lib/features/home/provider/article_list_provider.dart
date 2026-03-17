@@ -17,16 +17,18 @@ class ArticleList extends _$ArticleList {
   int currentPage = 0;
   int pageCount = 0;
 
-  late List currentList = [];
+  late List<Articles> currentList = [];
   late int oldLength = 0;
 
   Future<List<Articles>> _fetchArticles() async {
     final httpManager = ref.read(httpManagerProvider.notifier);
-    ResultData? response =
-        await httpManager.netFetch(ApiAddress.articleUrl(pageNumber: 0));
+    ResultData? response = await httpManager.netFetch(
+      ApiAddress.articleUrl(pageNumber: 0),
+    );
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-        response?.getData() as Map<String, dynamic>,
-        (json) => Articles.fromJson(json as Map<String, dynamic>));
+      response?.getData() as Map<String, dynamic>,
+      (json) => Articles.fromJson(json as Map<String, dynamic>),
+    );
     if (kDebugMode) {
       print('articles:${articles.datas}');
     }
@@ -50,7 +52,7 @@ class ArticleList extends _$ArticleList {
     // final http = ref.read(httpManagerProvider.notifier);
     listenSelf((prev, curr) {
       // prev?.value = [...(prev.value ?? []), ...?curr.value];
-      print('xxx');
+      debugPrint('xxx');
     });
     return _fetchArticles();
   }
@@ -68,11 +70,13 @@ class ArticleList extends _$ArticleList {
     oldLength = currentList.length;
 
     final httpManager = ref.read(httpManagerProvider.notifier);
-    ResultData? response = await httpManager
-        .netFetch(ApiAddress.articleUrl(pageNumber: currentPage++));
+    ResultData? response = await httpManager.netFetch(
+      ApiAddress.articleUrl(pageNumber: currentPage++),
+    );
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-        response?.getData() as Map<String, dynamic>,
-        (json) => Articles.fromJson(json as Map<String, dynamic>));
+      response?.getData() as Map<String, dynamic>,
+      (json) => Articles.fromJson(json as Map<String, dynamic>),
+    );
     currentPage = articles.curPage!;
     state = AsyncValue.data([...(state.value ?? []), ...?articles.datas]);
     // 通知 SliverAnimatedList 插入新项目

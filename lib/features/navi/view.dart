@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/widgets/responsive/responsive_builder.dart';
+import 'package:wanandroid_app_flutter_riverpod/shared/widgets/webview_page.dart';
 
 class NaviPage extends ConsumerWidget {
   const NaviPage({super.key});
@@ -86,7 +87,11 @@ class NaviPage extends ConsumerWidget {
             title: Text('${categories[index]} - 网站 ${subIndex + 1}'),
             trailing: const Icon(Icons.open_in_new, size: 16),
             onTap: () {
-              // TODO: Open website
+              _openWebsite(
+                context,
+                'https://www.wanandroid.com',
+                '${categories[index]} - 网站 ${subIndex + 1}',
+              );
             },
           ),
         ),
@@ -138,5 +143,15 @@ class NaviPage extends ConsumerWidget {
       Icons.dns,
     ];
     return icons[index % icons.length];
+  }
+
+  /// 打开网页
+  void _openWebsite(BuildContext context, String url, String title) {
+    Navigator.push<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => WebViewPage(url: url, title: title),
+      ),
+    );
   }
 }

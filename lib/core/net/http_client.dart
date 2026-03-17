@@ -80,11 +80,11 @@ class HttpManager extends _$HttpManager {
     // print(options.headers);
 
     resultError(DioException e) {
-      Response? errorResponse;
+      Response<dynamic>? errorResponse;
       if (e.response != null) {
         errorResponse = e.response;
       } else {
-        errorResponse = Response(
+        errorResponse = Response<dynamic>(
           statusCode: 999,
           requestOptions: RequestOptions(path: url),
         );
@@ -96,7 +96,7 @@ class HttpManager extends _$HttpManager {
       return ResultData(e.message, false, errorResponse!.statusCode);
     }
 
-    Response response;
+    Response<dynamic> response;
 
     try {
       response = await dio.request(

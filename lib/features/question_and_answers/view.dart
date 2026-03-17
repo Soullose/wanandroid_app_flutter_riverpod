@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/widgets/responsive/responsive_builder.dart';
+import 'package:wanandroid_app_flutter_riverpod/shared/widgets/webview_page.dart';
 
 class QuestionAndAnswersPage extends ConsumerWidget {
   const QuestionAndAnswersPage({super.key});
@@ -54,7 +55,7 @@ class QuestionAndAnswersPage extends ConsumerWidget {
               crossAxisCount: crossAxisCount,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              childAspectRatio: 1.5,
+              childAspectRatio: 1.2,
             ),
             delegate: SliverChildBuilderDelegate(
               (_, int index) => _buildQuestionGridItem(context, index),
@@ -81,7 +82,7 @@ class QuestionAndAnswersPage extends ConsumerWidget {
         subtitle: Text('问题描述 ${index + 1}'),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {
-          // TODO: Navigate to question detail
+          _openQuestionDetail(context);
         },
       ),
     );
@@ -92,7 +93,7 @@ class QuestionAndAnswersPage extends ConsumerWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to question detail
+          _openQuestionDetail(context);
         },
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -130,6 +131,19 @@ class QuestionAndAnswersPage extends ConsumerWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  /// 打开问题详情
+  void _openQuestionDetail(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => const WebViewPage(
+          url: 'https://www.wanandroid.com/wenda',
+          title: '问答详情',
         ),
       ),
     );
