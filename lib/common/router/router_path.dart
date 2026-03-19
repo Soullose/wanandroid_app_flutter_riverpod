@@ -7,7 +7,8 @@ enum RouterPath {
   qAnda,
   navi,
   profile,
-  setting;
+  setting,
+  logManagement;
 
   String get path {
     switch (this) {
@@ -29,6 +30,8 @@ enum RouterPath {
         return '/profile';
       case RouterPath.setting:
         return '/setting';
+      case RouterPath.logManagement:
+        return '/log_management';
     }
   }
 
@@ -52,6 +55,8 @@ enum RouterPath {
         return '我的';
       case RouterPath.setting:
         return '设置';
+      case RouterPath.logManagement:
+        return '日志管理';
     }
   }
 }

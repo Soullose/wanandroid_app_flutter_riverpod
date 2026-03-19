@@ -7,9 +7,11 @@ import '../../features/main_wrapper/view.dart';
 import '../../features/navi/view.dart';
 import '../../features/profile/view.dart';
 import '../../features/question_and_answers/view.dart';
+import '../../features/setting/view.dart';
 import '../../features/sign_in/view.dart';
 import '../../features/sign_up/view.dart';
 import '../../features/welcome/view.dart';
+import '../../features/logger/view/log_management_page.dart';
 import 'router_notifier.dart';
 import 'router_path.dart';
 
@@ -100,6 +102,20 @@ List<RouteBase> get routes => [
             builder: (_, _) => const ProfilePage(),
           ),
         ],
+      ),
+    ],
+  ),
+
+  /// 设置页面
+  GoRoute(
+    path: RouterPath.setting.path,
+    name: RouterPath.setting.description,
+    builder: (_, _) => const SettingPage(),
+    routes: [
+      GoRoute(
+        path: RouterPath.logManagement.path,
+        name: RouterPath.logManagement.description,
+        builder: (_, ____) => const LogManagementPage(),
       ),
     ],
   ),

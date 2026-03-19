@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wanandroid_app_flutter_riverpod/common/router/router_path.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme_mode.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/widgets/responsive/responsive_builder.dart';
 
@@ -39,6 +41,12 @@ class SettingPage extends ConsumerWidget {
             icon: Icons.delete_outline,
             title: '清除缓存',
             onTap: () => _showClearCacheDialog(context),
+          ),
+          _buildSettingItem(
+            context: context,
+            icon: Icons.article,
+            title: '日志管理',
+            onTap: () => context.go(RouterPath.logManagement.path),
           ),
           _buildSettingItem(
             context: context,
