@@ -7,6 +7,7 @@ import '../result_data.dart';
 
 /// 响应拦截器
 /// 统一处理响应数据，包装为 ResultData
+/// 自动提取 WanAndroid API 标准格式中的 data 字段
 class ResponseInterceptors extends InterceptorsWrapper {
   @override
   void onResponse(
@@ -16,6 +17,7 @@ class ResponseInterceptors extends InterceptorsWrapper {
     try {
       final statusCode = response.statusCode;
       final headers = response.headers;
+      final responseData = response.data;
 
       // 检查 HTTP 状态码
       if (statusCode != null &&
@@ -25,13 +27,30 @@ class ResponseInterceptors extends InterceptorsWrapper {
         final contentType = headers.value(Headers.contentTypeHeader);
         final isTextResponse = contentType?.contains('text') ?? false;
 
-        response.data = ResultData(
-          data: response.data,
-          success: true,
-          code: statusCode,
-          headers: headers,
-          message: isTextResponse ? null : '请求成功',
-        );
+        // WanAndroid API 标准格式: { data: ..., errorCode: ..., errorMsg: ... }
+        // 自动提取嵌套的 data 字段和业务状态码
+        if (responseData is Map<String, dynamic>) {
+          final apiErrorCode = responseData['errorCode'] as int?;
+          final apiErrorMsg = responseData['errorMsg'] as String?;
+          final apiData = responseData['data'];
+
+          response.data = ResultData(
+            data: apiData,
+            success: apiErrorCode == 0,
+            code: apiErrorCode ?? statusCode,
+            headers: headers,
+            message: apiErrorMsg ?? (isTextResponse ? null : '请求成功'),
+          );
+        } else {
+          // 非 Map 类型响应（如纯文本、列表等），保持原样
+          response.data = ResultData(
+            data: responseData,
+            success: true,
+            code: statusCode,
+            headers: headers,
+            message: isTextResponse ? null : '请求成功',
+          );
+        }
       } else {
         // 非 2xx 状态码
         response.data = ResultData(

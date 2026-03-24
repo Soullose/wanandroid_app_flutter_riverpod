@@ -4,8 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/constants/api_address.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/net/http_client.dart';
 import 'package:wanandroid_app_flutter_riverpod/core/net/result_data.dart';
+import 'package:wanandroid_app_flutter_riverpod/core/net/result_data_extension.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/article/domain/entities/article_list.dart';
-import 'package:wanandroid_app_flutter_riverpod/model/pagination_data.dart';
 
 part 'article_list_provider.g.dart';
 
@@ -26,8 +26,12 @@ class ArticleList extends _$ArticleList {
       ApiAddress.articleUrl(pageNumber: 0),
     );
 
-    final responseData = response?.data;
-    if (responseData == null) {
+    // 使用扩展方法解析分页数据
+    final articles = response?.parsePagination<Articles>(
+      (json) => Articles.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (articles == null) {
       if (kDebugMode) {
         print(
           'articles: response data is null, errorCode: ${response?.code}, errorMsg: ${response?.message}',
@@ -36,10 +40,6 @@ class ArticleList extends _$ArticleList {
       return [];
     }
 
-    late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-      responseData as Map<String, dynamic>,
-      (json) => Articles.fromJson(json as Map<String, dynamic>),
-    );
     if (kDebugMode) {
       print('articles:${articles.datas}');
     }
@@ -85,8 +85,12 @@ class ArticleList extends _$ArticleList {
       ApiAddress.articleUrl(pageNumber: currentPage++),
     );
 
-    final responseData = response?.data;
-    if (responseData == null) {
+    // 使用扩展方法解析分页数据
+    final articles = response?.parsePagination<Articles>(
+      (json) => Articles.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (articles == null) {
       if (kDebugMode) {
         print(
           'articles: response data is null, errorCode: ${response?.code}, errorMsg: ${response?.message}',
@@ -94,11 +98,6 @@ class ArticleList extends _$ArticleList {
       }
       return;
     }
-
-    late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-      responseData as Map<String, dynamic>,
-      (json) => Articles.fromJson(json as Map<String, dynamic>),
-    );
     currentPage = articles.curPage!;
     state = AsyncValue.data([...(state.value ?? []), ...?articles.datas]);
     // 通知 SliverAnimatedList 插入新项目
