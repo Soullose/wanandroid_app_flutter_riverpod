@@ -24,21 +24,32 @@ class CookieInterceptors extends QueuedInterceptorsWrapper {
 
   @override
   void onResponse(
-      Response<dynamic> response, ResponseInterceptorHandler handler) {
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    if (kDebugMode) {
+      print(
+        'CookieInterceptors.onResponse - path: ${response.requestOptions.path}',
+      );
+      print(
+        'CookieInterceptors.onResponse - statusCode: ${response.statusCode}',
+      );
+    }
     final cookie = getCookie();
-    if (cookie!.isEmpty) {
-      saveCookie(response);
+    if (cookie == null || cookie.isEmpty) {
+      await saveCookie(response);
     }
     super.onResponse(response, handler);
   }
 
-  void saveCookie(Response<dynamic> response) async {
-    final setCookie = response.headers.map[responseHeaderKey]!;
+  Future<void> saveCookie(Response<dynamic> response) async {
+    final setCookie = response.headers.map[responseHeaderKey];
     if (kDebugMode) {
-      print('cookie:$setCookie');
+      print('CookieInterceptors.saveCookie - setCookie: $setCookie');
     }
-    ref.read(cookieProvider.notifier).updateCookie(setCookie);
-    // cookie.state = setCookie;
+    if (setCookie != null && setCookie.isNotEmpty) {
+      ref.read(cookieProvider.notifier).updateCookie(setCookie);
+    }
   }
 
   List<String>? getCookie() {

@@ -5,38 +5,55 @@ import 'package:flutter/foundation.dart';
 
 import '../result_data.dart';
 
+/// 响应拦截器
+/// 统一处理响应数据，包装为 ResultData
 class ResponseInterceptors extends InterceptorsWrapper {
   @override
   void onResponse(
     Response<dynamic> response,
     ResponseInterceptorHandler handler,
   ) {
-    RequestOptions option = response.requestOptions;
-
-    late ResultData value;
-
     try {
-      var header = response.headers[Headers.contentTypeHeader];
-      if (header.toString().contains("text")) {
-        value = ResultData(response.data, true, response.statusCode);
-      } else if (response.statusCode! >= HttpStatus.ok &&
-          response.statusCode! < HttpStatus.multipleChoices) {
-        value = ResultData(
-          response.data,
-          true,
-          response.statusCode,
-          headers: response.headers.map.map(
-            (key, value) => MapEntry(key, value.join(',')),
-          ),
+      final statusCode = response.statusCode;
+      final headers = response.headers;
+
+      // 检查 HTTP 状态码
+      if (statusCode != null &&
+          statusCode >= HttpStatus.ok &&
+          statusCode < HttpStatus.multipleChoices) {
+        // 成功响应 (2xx)
+        final contentType = headers.value(Headers.contentTypeHeader);
+        final isTextResponse = contentType?.contains('text') ?? false;
+
+        response.data = ResultData(
+          data: response.data,
+          success: true,
+          code: statusCode,
+          headers: headers,
+          message: isTextResponse ? null : '请求成功',
         );
-      } else {}
+      } else {
+        // 非 2xx 状态码
+        response.data = ResultData(
+          data: response.data,
+          success: false,
+          code: statusCode ?? -1,
+          headers: headers,
+          message: '请求失败: ${statusCode ?? "未知状态码"}',
+        );
+      }
     } catch (e) {
       if (kDebugMode) {
-        print('${e.toString()}${option.path}');
+        debugPrint('ResponseInterceptors error: ${e.toString()}');
       }
-      value = ResultData(response.data, false, response.statusCode);
+      response.data = ResultData(
+        data: response.data,
+        success: false,
+        code: response.statusCode ?? -1,
+        message: '响应解析失败: ${e.toString()}',
+      );
     }
-    response.data = value;
+
     super.onResponse(response, handler);
   }
 }

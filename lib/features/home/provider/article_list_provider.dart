@@ -25,8 +25,19 @@ class ArticleList extends _$ArticleList {
     ResultData? response = await httpManager.netFetch(
       ApiAddress.articleUrl(pageNumber: 0),
     );
+
+    final responseData = response?.data;
+    if (responseData == null) {
+      if (kDebugMode) {
+        print(
+          'articles: response data is null, errorCode: ${response?.code}, errorMsg: ${response?.message}',
+        );
+      }
+      return [];
+    }
+
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-      response?.getData() as Map<String, dynamic>,
+      responseData as Map<String, dynamic>,
       (json) => Articles.fromJson(json as Map<String, dynamic>),
     );
     if (kDebugMode) {
@@ -73,8 +84,19 @@ class ArticleList extends _$ArticleList {
     ResultData? response = await httpManager.netFetch(
       ApiAddress.articleUrl(pageNumber: currentPage++),
     );
+
+    final responseData = response?.data;
+    if (responseData == null) {
+      if (kDebugMode) {
+        print(
+          'articles: response data is null, errorCode: ${response?.code}, errorMsg: ${response?.message}',
+        );
+      }
+      return;
+    }
+
     late PaginationData<Articles> articles = PaginationData<Articles>.fromJson(
-      response?.getData() as Map<String, dynamic>,
+      responseData as Map<String, dynamic>,
       (json) => Articles.fromJson(json as Map<String, dynamic>),
     );
     currentPage = articles.curPage!;

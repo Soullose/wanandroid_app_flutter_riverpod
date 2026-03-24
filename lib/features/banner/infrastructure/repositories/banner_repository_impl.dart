@@ -17,6 +17,12 @@ class BannerRepositoryImpl implements BannerRepository {
   Future<List<Banner>> getBanner() async {
     final httpManager = _ref.read(httpManagerProvider.notifier);
     ResultData? response = await httpManager.netFetch(ApiAddress.bannerUrl);
-    return bannerFromJson(jsonEncode(response?.getData()));
+
+    final responseData = response?.data['data'];
+    if (responseData == null) {
+      return [];
+    }
+
+    return bannerFromJson(jsonEncode(responseData));
   }
 }
