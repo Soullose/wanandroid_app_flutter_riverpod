@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme_mode.dart';
+import 'package:wanandroid_app_flutter_riverpod/shared/widgets/network/network_aware_wrapper.dart';
 
 import 'common/router/app_router.dart';
 
@@ -31,7 +32,14 @@ class _AppState extends ConsumerState<App> {
           darkTheme: ref.watch(darkThemeProvider),
           themeMode: themeMode.value,
           routerConfig: router,
-          builder: EasyLoading.init(),
+          builder: (context, child) {
+            // 初始化 EasyLoading
+            final easyLoadingBuilder = EasyLoading.init();
+            final easyLoadingChild = easyLoadingBuilder(context, child);
+
+            // 包装网络状态横幅
+            return NetworkAwareWrapper(child: easyLoadingChild);
+          },
         );
       },
     );
