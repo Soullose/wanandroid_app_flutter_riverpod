@@ -51,10 +51,14 @@ class _HomePageState extends ConsumerState<HomePage> {
       article_provider.articlesProvider.notifier,
     );
 
-    if (notification is ScrollEndNotification) {
-      if (notification.metrics.pixels >= notification.metrics.maxScrollExtent) {
+    // 在滚动到90%位置时触发加载更多，提前加载避免卡顿
+    if (notification is ScrollUpdateNotification) {
+      final maxScroll = notification.metrics.maxScrollExtent;
+      final currentScroll = notification.metrics.pixels;
+      // 当滚动到90%位置时触发加载更多
+      if (maxScroll > 0 && currentScroll >= maxScroll * 0.9) {
         if (kDebugMode) {
-          debugPrint('加载更多数据');
+          debugPrint('触发加载更多数据(90%位置)');
         }
         articleNotifierProvider.loadMore();
       }
@@ -152,15 +156,40 @@ class _HomePageState extends ConsumerState<HomePage> {
                     if (list.isEmpty) {
                       return const SliverToBoxAdapter(child: Text('空'));
                     }
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        final Articles article = list[index];
-                        return ArticleCard(
-                          article: article,
-                          index: index,
-                          isVisible: true,
-                        );
-                      }, childCount: list.length),
+                    return SliverMainAxisGroup(
+                      slivers: [
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final Articles article = list[index];
+                            return ArticleCard(
+                              article: article,
+                              index: index,
+                              isVisible: true,
+                            );
+                          }, childCount: list.length),
+                        ),
+                        // 底部加载指示器
+                        if (data.isLoadingMore)
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        // 加载更多错误提示
+                        if (data.loadMoreError != null)
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Center(
+                                child: Text('加载失败: ${data.loadMoreError}'),
+                              ),
+                            ),
+                          ),
+                      ],
                     );
                   },
                   error: (err, stack) {
@@ -246,24 +275,50 @@ class _HomePageState extends ConsumerState<HomePage> {
                     if (list.isEmpty) {
                       return const SliverToBoxAdapter(child: Text('空'));
                     }
-                    return SliverPadding(
-                      padding: const EdgeInsets.all(16),
-                      sliver: SliverGrid(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 1.2,
+                    return SliverMainAxisGroup(
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.all(16),
+                          sliver: SliverGrid(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  mainAxisSpacing: 16,
+                                  crossAxisSpacing: 16,
+                                  childAspectRatio: 1.2,
+                                ),
+                            delegate: SliverChildBuilderDelegate((
+                              _,
+                              int index,
+                            ) {
+                              final Articles article = list[index];
+                              return ArticleGridCard(
+                                article: article,
+                                index: index,
+                                isVisible: true,
+                              );
+                            }, childCount: list.length),
+                          ),
                         ),
-                        delegate: SliverChildBuilderDelegate((_, int index) {
-                          final Articles article = list[index];
-                          return ArticleGridCard(
-                            article: article,
-                            index: index,
-                            isVisible: true,
-                          );
-                        }, childCount: list.length),
-                      ),
+                        // 底部加载指示器
+                        if (data.isLoadingMore)
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                        // 加载更多错误提示
+                        if (data.loadMoreError != null)
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Center(
+                                child: Text('加载失败: ${data.loadMoreError}'),
+                              ),
+                            ),
+                          ),
+                      ],
                     );
                   },
                   error: (err, stack) {
