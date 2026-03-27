@@ -8,7 +8,8 @@ enum RouterPath {
   navi,
   profile,
   setting,
-  logManagement;
+  logManagement,
+  networkError;
 
   String get path {
     switch (this) {
@@ -32,6 +33,8 @@ enum RouterPath {
         return '/setting';
       case RouterPath.logManagement:
         return '/log_management';
+      case RouterPath.networkError:
+        return '/network_error';
     }
   }
 
@@ -57,6 +60,8 @@ enum RouterPath {
         return '设置';
       case RouterPath.logManagement:
         return '日志管理';
+      case RouterPath.networkError:
+        return '网络错误';
     }
   }
 }

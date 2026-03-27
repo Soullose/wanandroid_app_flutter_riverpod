@@ -93,10 +93,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "7981eb922842c77033026eb4341d5af651562008cdb116bdfa31fc46516b6462"
+      sha256: "521daf8d189deb79ba474e43a696b41c49fb3987818dbacf3308f1e03673a75e"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.12.2"
+    version: "2.13.1"
   built_collection:
     dependency: transitive
     description:
@@ -815,6 +815,54 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.0"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      sha256: bc917da36261b00137bbc8896bf1482169cd76f866282368948f032c8c1caae1
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "12.0.1"
+  permission_handler_android:
+    dependency: transitive
+    description:
+      name: permission_handler_android
+      sha256: "1e3bc410ca1bf84662104b100eb126e066cb55791b7451307f9708d4007350e6"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "13.0.1"
+  permission_handler_apple:
+    dependency: transitive
+    description:
+      name: permission_handler_apple
+      sha256: f000131e755c54cf4d84a5d8bd6e4149e262cc31c5a8b1d698de1ac85fa41023
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "9.4.7"
+  permission_handler_html:
+    dependency: transitive
+    description:
+      name: permission_handler_html
+      sha256: "38f000e83355abb3392140f6bc3030660cfaef189e1f87824facb76300b4ff24"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.3+5"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      sha256: eb99b295153abce5d683cac8c02e22faab63e50679b937fa1bf67d58bb282878
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.3.0"
+  permission_handler_windows:
+    dependency: transitive
+    description:
+      name: permission_handler_windows
+      sha256: "1a790728016f79a41216d88672dbc5df30e686e811ad4e698bfc51f76ad91f1e"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.1"
   petitparser:
     dependency: transitive
     description:
@@ -1058,50 +1106,50 @@ packages:
     dependency: "direct main"
     description:
       name: sherpa_onnx
-      sha256: "7958f9449e904c57eca69c2155ce25d896a4bd77cc455ab8a8c7b6fa314505e5"
+      sha256: "0e2d256711952e9e5c9d0d77deb66f9a63085c949f248fba3f8c48c3ec57c1fd"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.12.32"
+    version: "1.12.34"
   sherpa_onnx_android:
     dependency: transitive
     description:
       name: sherpa_onnx_android
-      sha256: f52b3b9e176e1ff7340d3cb1f05b061a757e72930d78715c85555c229d09df09
+      sha256: b0c1f489daf32fba17b602bac4b5eaa7f1f95b6c0c520830a87dd25fe1fe20d8
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.12.32"
+    version: "1.12.34"
   sherpa_onnx_ios:
     dependency: transitive
     description:
       name: sherpa_onnx_ios
-      sha256: "99343ecf3247c45389db0e54219f0dfdd41a00c4ee3098f73cc969cceae9f4d6"
+      sha256: "19032ec56c4b80e0c1106548aae32fa117633445dbce051c70febeff5857dc6a"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.12.32"
+    version: "1.12.34"
   sherpa_onnx_linux:
     dependency: transitive
     description:
       name: sherpa_onnx_linux
-      sha256: "5b45b20e0e1122ebd30baf5b9849f5a6cc9e98d1261f56ede6069ac20172d017"
+      sha256: e9febe73fecf248b337f819616f2d00c86837330379471c3715cb814b9dfee74
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.12.32"
+    version: "1.12.34"
   sherpa_onnx_macos:
     dependency: transitive
     description:
       name: sherpa_onnx_macos
-      sha256: "3a06f7eea15fd8469992a403b1e139f9ffa10787dca902bf77bcfdb3b86bfc96"
+      sha256: "7a6352c8bdaeca95ed18bc43c77ba4ee0cc3951abd66648ae353d21f0b255bae"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.12.32"
+    version: "1.12.34"
   sherpa_onnx_windows:
     dependency: transitive
     description:
       name: sherpa_onnx_windows
-      sha256: "5a9a31b54ac63a76ccb732a1b172dd7a11c2667f7e0ae9edc056871cfa8ca4ea"
+      sha256: da26d97fdeff6cebc06b482e02149e5104b3d1e0c88ebb47b6aa8e15638e6aec
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.12.32"
+    version: "1.12.34"
   sky_engine:
     dependency: transitive
     description: flutter

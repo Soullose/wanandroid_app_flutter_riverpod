@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features//home/view.dart';
 import '../../features/main_wrapper/view.dart';
 import '../../features/navi/view.dart';
+import '../../features/network_error/view.dart';
 import '../../features/profile/view.dart';
 import '../../features/question_and_answers/view.dart';
 import '../../features/setting/view.dart';
@@ -41,6 +42,11 @@ List<RouteBase> get routes => [
     path: RouterPath.welcome.path,
     name: RouterPath.welcome.description,
     builder: (_, _) => const WelcomePage(),
+  ),
+  GoRoute(
+    path: RouterPath.networkError.path,
+    name: RouterPath.networkError.description,
+    builder: (_, _) => const NetworkErrorPage(),
   ),
   GoRoute(
     path: RouterPath.signIn.path,
