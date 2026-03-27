@@ -124,7 +124,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           return handleScrollNotification(notification);
         },
         child: RefreshIndicator(
-          onRefresh: () => ref.refresh(articleListProvider.future),
+          onRefresh: () =>
+              ref.read(article_provider.articlesProvider.notifier).refresh(),
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
@@ -151,17 +152,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                     if (list.isEmpty) {
                       return const SliverToBoxAdapter(child: Text('空'));
                     }
-                    return SliverAnimatedList(
-                      key: listKey,
-                      initialItemCount: list.length,
-                      itemBuilder: (context, index, animation) {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
                         final Articles article = list[index];
                         return ArticleCard(
                           article: article,
                           index: index,
                           isVisible: true,
                         );
-                      },
+                      }, childCount: list.length),
                     );
                   },
                   error: (err, stack) {
@@ -210,7 +209,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           return handleScrollNotification(notification);
         },
         child: RefreshIndicator(
-          onRefresh: () => ref.refresh(articleListProvider.future),
+          onRefresh: () =>
+              ref.read(article_provider.articlesProvider.notifier).refresh(),
           child: CustomScrollView(
             controller: scrollController,
             slivers: <Widget>[
