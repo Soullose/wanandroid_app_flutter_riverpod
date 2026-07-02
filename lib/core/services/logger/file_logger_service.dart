@@ -9,6 +9,7 @@ import 'package:wanandroid_app_flutter_riverpod/features/logger/model/log_entry.
 import 'package:wanandroid_app_flutter_riverpod/features/logger/model/log_level.dart';
 import 'package:wanandroid_app_flutter_riverpod/features/logger/model/network_info.dart';
 
+import '../device/deep_device_info_service.dart';
 import 'device_info_service.dart';
 import 'network_info_service.dart';
 
@@ -25,6 +26,7 @@ class FileLoggerService {
   final Uuid _uuid = const Uuid();
   final DeviceInfoService _deviceInfoService = DeviceInfoService();
   final NetworkInfoService _networkInfoService = NetworkInfoService();
+  final DeepDeviceInfoService _deepDeviceInfoService = DeepDeviceInfoService();
 
   Directory? _logDirectory;
 
@@ -63,6 +65,7 @@ class FileLoggerService {
     // 收集设备信息和网络信息
     DeviceInfo? deviceInfo;
     NetworkInfo? networkInfo;
+    Map<String, dynamic>? mergedAdditionalData;
 
     try {
       deviceInfo = await _deviceInfoService.collectDeviceInfo();
@@ -80,6 +83,79 @@ class FileLoggerService {
       }
     }
 
+    // 收集深度设备信息（CPU/内存/磁盘/网络接口），合并到附加数据
+    try {
+      final deepInfo = await _deepDeviceInfoService.collectAll();
+      final deepData = <String, dynamic>{
+        'system': {
+          'hostName': deepInfo.system.hostName,
+          'osName': deepInfo.system.osName,
+          'osVersion': deepInfo.system.osVersion,
+          'kernelVersion': deepInfo.system.kernelVersion,
+          'distributionId': deepInfo.system.distributionId,
+          'uptimeSeconds': deepInfo.system.uptimeSeconds,
+          'loadAverageOne': deepInfo.system.loadAverageOne,
+          'loadAverageFive': deepInfo.system.loadAverageFive,
+          'loadAverageFifteen': deepInfo.system.loadAverageFifteen,
+        },
+        'cpu': {
+          'brand': deepInfo.cpu.brand,
+          'vendorId': deepInfo.cpu.vendorId,
+          'physicalCoreCount': deepInfo.cpu.physicalCoreCount,
+          'logicalCoreCount': deepInfo.cpu.logicalCoreCount,
+          'frequencyMhz': deepInfo.cpu.globalFrequencyMhz,
+          'usagePercent': deepInfo.cpu.globalUsagePercent,
+          'cores': deepInfo.cpu.cores
+              .map((c) => {
+                    'name': c.name,
+                    'frequencyMhz': c.frequencyMhz,
+                    'usagePercent': c.usagePercent,
+                  })
+              .toList(),
+        },
+        'memory': {
+          'totalBytes': deepInfo.memory.totalBytes,
+          'usedBytes': deepInfo.memory.usedBytes,
+          'freeBytes': deepInfo.memory.freeBytes,
+          'availableBytes': deepInfo.memory.availableBytes,
+          'usagePercent': deepInfo.memory.usagePercent,
+          'swapTotalBytes': deepInfo.memory.swapTotalBytes,
+          'swapUsedBytes': deepInfo.memory.swapUsedBytes,
+          'swapFreeBytes': deepInfo.memory.swapFreeBytes,
+        },
+        'disks': deepInfo.disks
+            .map((d) => {
+                  'name': d.name,
+                  'mountPoint': d.mountPoint,
+                  'totalBytes': d.totalBytes,
+                  'availableBytes': d.availableBytes,
+                  'usagePercent': d.usagePercent,
+                  'fileSystem': d.fileSystem,
+                  'diskType': d.diskType,
+                  'isRemovable': d.isRemovable,
+                })
+            .toList(),
+        'networkInterfaces': deepInfo.networkInterfaces
+            .map((n) => {
+                  'name': n.name,
+                  'macAddress': n.macAddress,
+                  'ipAddresses': n.ipAddresses,
+                  'totalReceivedBytes': n.totalReceivedBytes,
+                  'totalTransmittedBytes': n.totalTransmittedBytes,
+                })
+            .toList(),
+      };
+      mergedAdditionalData = {
+        'deepDeviceInfo': deepData,
+        if (additionalData != null) ...additionalData,
+      };
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to collect deep device info: $e');
+      }
+      mergedAdditionalData = additionalData;
+    }
+
     final logEntry = LogEntry(
       id: id,
       timestamp: timestamp,
@@ -89,7 +165,7 @@ class FileLoggerService {
       errorType: error.runtimeType.toString(),
       deviceInfo: deviceInfo,
       networkInfo: networkInfo,
-      additionalData: additionalData,
+      additionalData: mergedAdditionalData,
     );
 
     // 生成日志文件名
@@ -177,10 +253,8 @@ class FileLoggerService {
 
     // 附加数据
     if (entry.additionalData != null && entry.additionalData!.isNotEmpty) {
-      buffer.writeln('\n[附加数据]');
-      buffer.writeln(
-        const JsonEncoder.withIndent('  ').convert(entry.additionalData),
-      );
+      buffer.writeln('\n[深度设备信息]');
+      _formatAdditionalData(buffer, entry.additionalData!, 0);
     }
 
     buffer.writeln('\n' + '=' * 80);
@@ -192,6 +266,48 @@ class FileLoggerService {
   String _formatDateTime(DateTime dateTime) {
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} '
         '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}.${dateTime.millisecond.toString().padLeft(3, '0')}';
+  }
+
+  /// 递归格式化深度设备信息（避免 Map 长 JSON 堆叠）
+  void _formatAdditionalData(
+    StringBuffer buffer,
+    Map<String, dynamic> data, [
+    int depth = 0,
+  ]) {
+    const maxDepth = 3;
+    if (depth > maxDepth) {
+      buffer.writeln('${'  ' * (depth + 1)}...');
+      return;
+    }
+
+    for (final entry in data.entries) {
+      final indent = '  ' * (depth + 1);
+      final value = entry.value;
+
+      if (value is Map<String, dynamic>) {
+        buffer.writeln('$indent${entry.key}:');
+        _formatAdditionalData(buffer, value, depth + 1);
+      } else if (value is List) {
+        if (value.isEmpty) {
+          buffer.writeln('$indent${entry.key}: []');
+        } else if (value.first is Map || value.first is List) {
+          buffer.writeln('$indent${entry.key}:');
+          for (final item in value) {
+            if (item is Map<String, dynamic>) {
+              _formatAdditionalData(buffer, item, depth + 1);
+            } else {
+              buffer.writeln('${'  ' * (depth + 2)}- $item');
+            }
+          }
+        } else {
+          buffer.writeln(
+            '$indent${entry.key}: [${value.join(", ")}]',
+          );
+        }
+      } else {
+        buffer.writeln('$indent${entry.key}: $value');
+      }
+    }
   }
 
   /// 获取所有日志条目

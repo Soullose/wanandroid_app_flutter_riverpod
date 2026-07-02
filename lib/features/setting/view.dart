@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wanandroid_app_flutter_riverpod/common/router/router_path.dart';
+import 'package:wanandroid_app_flutter_riverpod/shared/providers/debug_provider.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme_mode.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/widgets/responsive/responsive_builder.dart';
 
@@ -48,6 +50,7 @@ class SettingPage extends ConsumerWidget {
             title: '日志管理',
             onTap: () => context.go(RouterPath.logManagement.path),
           ),
+          if (kDebugMode) _buildDebugItem(context, ref),
           _buildSettingItem(
             context: context,
             icon: Icons.info,
@@ -99,6 +102,7 @@ class SettingPage extends ConsumerWidget {
                 title: '关于',
                 onTap: () => _showAboutDialog(context),
               ),
+              if (kDebugMode) _buildDebugItem(context, ref),
               _buildSettingItem(
                 context: context,
                 icon: Icons.exit_to_app,
@@ -146,6 +150,7 @@ class SettingPage extends ConsumerWidget {
                 title: '关于',
                 onTap: () => _showAboutDialog(context),
               ),
+              if (kDebugMode) _buildDebugItem(context, ref),
               _buildSettingItem(
                 context: context,
                 icon: Icons.exit_to_app,
@@ -307,6 +312,26 @@ class SettingPage extends ConsumerWidget {
           ],
         );
       },
+    );
+  }
+
+  /// 调试面板切换项
+  Widget _buildDebugItem(BuildContext context, WidgetRef ref) {
+    final isVisible = ref.watch(debugPanelVisibleProvider);
+    return ListTile(
+      leading: Icon(
+        Icons.developer_mode,
+        color: isVisible ? Colors.amber : Theme.of(context).colorScheme.primary,
+      ),
+      title: Text(isVisible ? '关闭调试面板' : '打开调试面板'),
+      subtitle: Text(isVisible ? 'Rust 设备信息浮动面板可见' : '显示 CPU/内存/磁盘实时数据'),
+      trailing: Switch(
+        value: isVisible,
+        onChanged: (v) => v
+            ? ref.read(debugPanelVisibleProvider.notifier).show()
+            : ref.read(debugPanelVisibleProvider.notifier).hide(),
+      ),
+      onTap: () => ref.read(debugPanelVisibleProvider.notifier).toggle(),
     );
   }
 

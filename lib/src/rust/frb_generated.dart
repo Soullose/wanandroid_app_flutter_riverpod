@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/device_info.dart';
 import 'api/simple.dart';
 import 'api/sysinfo.dart';
 import 'dart:async';
@@ -67,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -1544505460;
+  int get rustContentHash => -1285496575;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -78,6 +79,18 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  Future<CpuInfo> crateApiDeviceInfoCollectCpuInfoDeep();
+
+  Future<DeepDeviceInfo> crateApiDeviceInfoCollectDeepDeviceInfo();
+
+  Future<List<DiskInfo>> crateApiDeviceInfoCollectDisksInfoDeep();
+
+  Future<MemoryInfo> crateApiDeviceInfoCollectMemoryInfoDeep();
+
+  Future<List<NetworkInterfaceInfo>> crateApiDeviceInfoCollectNetworkInfoDeep();
+
+  Future<DeepSystemInfo> crateApiDeviceInfoCollectSystemInfoDeep();
+
   String crateApiSysinfoCpuArch();
 
   String crateApiSimpleGreet({required String name});
@@ -98,12 +111,175 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
+  Future<CpuInfo> crateApiDeviceInfoCollectCpuInfoDeep() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 1,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_cpu_info,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiDeviceInfoCollectCpuInfoDeepConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDeviceInfoCollectCpuInfoDeepConstMeta =>
+      const TaskConstMeta(debugName: "collect_cpu_info_deep", argNames: []);
+
+  @override
+  Future<DeepDeviceInfo> crateApiDeviceInfoCollectDeepDeviceInfo() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 2,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_deep_device_info,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiDeviceInfoCollectDeepDeviceInfoConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDeviceInfoCollectDeepDeviceInfoConstMeta =>
+      const TaskConstMeta(debugName: "collect_deep_device_info", argNames: []);
+
+  @override
+  Future<List<DiskInfo>> crateApiDeviceInfoCollectDisksInfoDeep() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 3,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_disk_info,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiDeviceInfoCollectDisksInfoDeepConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDeviceInfoCollectDisksInfoDeepConstMeta =>
+      const TaskConstMeta(debugName: "collect_disks_info_deep", argNames: []);
+
+  @override
+  Future<MemoryInfo> crateApiDeviceInfoCollectMemoryInfoDeep() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 4,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_memory_info,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiDeviceInfoCollectMemoryInfoDeepConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDeviceInfoCollectMemoryInfoDeepConstMeta =>
+      const TaskConstMeta(debugName: "collect_memory_info_deep", argNames: []);
+
+  @override
+  Future<List<NetworkInterfaceInfo>>
+  crateApiDeviceInfoCollectNetworkInfoDeep() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 5,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_network_interface_info,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiDeviceInfoCollectNetworkInfoDeepConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDeviceInfoCollectNetworkInfoDeepConstMeta =>
+      const TaskConstMeta(debugName: "collect_network_info_deep", argNames: []);
+
+  @override
+  Future<DeepSystemInfo> crateApiDeviceInfoCollectSystemInfoDeep() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 6,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_deep_system_info,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiDeviceInfoCollectSystemInfoDeepConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiDeviceInfoCollectSystemInfoDeepConstMeta =>
+      const TaskConstMeta(debugName: "collect_system_info_deep", argNames: []);
+
+  @override
   String crateApiSysinfoCpuArch() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -126,7 +302,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -151,7 +327,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 9,
             port: port_,
           );
         },
@@ -175,7 +351,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -197,7 +373,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -220,9 +396,184 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool dco_decode_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
+  }
+
+  @protected
+  BigInt dco_decode_box_autoadd_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_usize(raw);
+  }
+
+  @protected
+  CoreInfo dco_decode_core_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return CoreInfo(
+      name: dco_decode_String(arr[0]),
+      frequencyMhz: dco_decode_u_64(arr[1]),
+      usagePercent: dco_decode_f_64(arr[2]),
+    );
+  }
+
+  @protected
+  CpuInfo dco_decode_cpu_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return CpuInfo(
+      arch: dco_decode_String(arr[0]),
+      brand: dco_decode_String(arr[1]),
+      vendorId: dco_decode_String(arr[2]),
+      physicalCoreCount: dco_decode_opt_box_autoadd_usize(arr[3]),
+      logicalCoreCount: dco_decode_usize(arr[4]),
+      globalFrequencyMhz: dco_decode_u_64(arr[5]),
+      globalUsagePercent: dco_decode_f_64(arr[6]),
+      cores: dco_decode_list_core_info(arr[7]),
+    );
+  }
+
+  @protected
+  DeepDeviceInfo dco_decode_deep_device_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return DeepDeviceInfo(
+      system: dco_decode_deep_system_info(arr[0]),
+      cpu: dco_decode_cpu_info(arr[1]),
+      memory: dco_decode_memory_info(arr[2]),
+      disks: dco_decode_list_disk_info(arr[3]),
+      networkInterfaces: dco_decode_list_network_interface_info(arr[4]),
+    );
+  }
+
+  @protected
+  DeepSystemInfo dco_decode_deep_system_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    return DeepSystemInfo(
+      hostName: dco_decode_String(arr[0]),
+      osName: dco_decode_String(arr[1]),
+      osVersion: dco_decode_String(arr[2]),
+      kernelVersion: dco_decode_String(arr[3]),
+      distributionId: dco_decode_String(arr[4]),
+      uptimeSeconds: dco_decode_u_64(arr[5]),
+      bootTimeUnix: dco_decode_u_64(arr[6]),
+      loadAverageOne: dco_decode_f_64(arr[7]),
+      loadAverageFive: dco_decode_f_64(arr[8]),
+      loadAverageFifteen: dco_decode_f_64(arr[9]),
+    );
+  }
+
+  @protected
+  DiskInfo dco_decode_disk_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return DiskInfo(
+      name: dco_decode_String(arr[0]),
+      mountPoint: dco_decode_String(arr[1]),
+      totalBytes: dco_decode_u_64(arr[2]),
+      availableBytes: dco_decode_u_64(arr[3]),
+      usagePercent: dco_decode_f_64(arr[4]),
+      fileSystem: dco_decode_String(arr[5]),
+      diskType: dco_decode_String(arr[6]),
+      isRemovable: dco_decode_bool(arr[7]),
+    );
+  }
+
+  @protected
+  double dco_decode_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as double;
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<CoreInfo> dco_decode_list_core_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_core_info).toList();
+  }
+
+  @protected
+  List<DiskInfo> dco_decode_list_disk_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_disk_info).toList();
+  }
+
+  @protected
+  List<NetworkInterfaceInfo> dco_decode_list_network_interface_info(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_network_interface_info)
+        .toList();
+  }
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
+  }
+
+  @protected
+  MemoryInfo dco_decode_memory_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 8)
+      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    return MemoryInfo(
+      totalBytes: dco_decode_u_64(arr[0]),
+      usedBytes: dco_decode_u_64(arr[1]),
+      freeBytes: dco_decode_u_64(arr[2]),
+      availableBytes: dco_decode_u_64(arr[3]),
+      usagePercent: dco_decode_f_64(arr[4]),
+      swapTotalBytes: dco_decode_u_64(arr[5]),
+      swapUsedBytes: dco_decode_u_64(arr[6]),
+      swapFreeBytes: dco_decode_u_64(arr[7]),
+    );
+  }
+
+  @protected
+  NetworkInterfaceInfo dco_decode_network_interface_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return NetworkInterfaceInfo(
+      name: dco_decode_String(arr[0]),
+      macAddress: dco_decode_String(arr[1]),
+      ipAddresses: dco_decode_list_String(arr[2]),
+      totalReceivedBytes: dco_decode_u_64(arr[3]),
+      totalTransmittedBytes: dco_decode_u_64(arr[4]),
+    );
+  }
+
+  @protected
+  BigInt? dco_decode_opt_box_autoadd_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_usize(raw);
+  }
+
+  @protected
+  BigInt dco_decode_u_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
   }
 
   @protected
@@ -238,6 +589,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  BigInt dco_decode_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
+  }
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
@@ -245,10 +602,242 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  BigInt sse_decode_box_autoadd_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_usize(deserializer));
+  }
+
+  @protected
+  CoreInfo sse_decode_core_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_frequencyMhz = sse_decode_u_64(deserializer);
+    var var_usagePercent = sse_decode_f_64(deserializer);
+    return CoreInfo(
+      name: var_name,
+      frequencyMhz: var_frequencyMhz,
+      usagePercent: var_usagePercent,
+    );
+  }
+
+  @protected
+  CpuInfo sse_decode_cpu_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_arch = sse_decode_String(deserializer);
+    var var_brand = sse_decode_String(deserializer);
+    var var_vendorId = sse_decode_String(deserializer);
+    var var_physicalCoreCount = sse_decode_opt_box_autoadd_usize(deserializer);
+    var var_logicalCoreCount = sse_decode_usize(deserializer);
+    var var_globalFrequencyMhz = sse_decode_u_64(deserializer);
+    var var_globalUsagePercent = sse_decode_f_64(deserializer);
+    var var_cores = sse_decode_list_core_info(deserializer);
+    return CpuInfo(
+      arch: var_arch,
+      brand: var_brand,
+      vendorId: var_vendorId,
+      physicalCoreCount: var_physicalCoreCount,
+      logicalCoreCount: var_logicalCoreCount,
+      globalFrequencyMhz: var_globalFrequencyMhz,
+      globalUsagePercent: var_globalUsagePercent,
+      cores: var_cores,
+    );
+  }
+
+  @protected
+  DeepDeviceInfo sse_decode_deep_device_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_system = sse_decode_deep_system_info(deserializer);
+    var var_cpu = sse_decode_cpu_info(deserializer);
+    var var_memory = sse_decode_memory_info(deserializer);
+    var var_disks = sse_decode_list_disk_info(deserializer);
+    var var_networkInterfaces = sse_decode_list_network_interface_info(
+      deserializer,
+    );
+    return DeepDeviceInfo(
+      system: var_system,
+      cpu: var_cpu,
+      memory: var_memory,
+      disks: var_disks,
+      networkInterfaces: var_networkInterfaces,
+    );
+  }
+
+  @protected
+  DeepSystemInfo sse_decode_deep_system_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_hostName = sse_decode_String(deserializer);
+    var var_osName = sse_decode_String(deserializer);
+    var var_osVersion = sse_decode_String(deserializer);
+    var var_kernelVersion = sse_decode_String(deserializer);
+    var var_distributionId = sse_decode_String(deserializer);
+    var var_uptimeSeconds = sse_decode_u_64(deserializer);
+    var var_bootTimeUnix = sse_decode_u_64(deserializer);
+    var var_loadAverageOne = sse_decode_f_64(deserializer);
+    var var_loadAverageFive = sse_decode_f_64(deserializer);
+    var var_loadAverageFifteen = sse_decode_f_64(deserializer);
+    return DeepSystemInfo(
+      hostName: var_hostName,
+      osName: var_osName,
+      osVersion: var_osVersion,
+      kernelVersion: var_kernelVersion,
+      distributionId: var_distributionId,
+      uptimeSeconds: var_uptimeSeconds,
+      bootTimeUnix: var_bootTimeUnix,
+      loadAverageOne: var_loadAverageOne,
+      loadAverageFive: var_loadAverageFive,
+      loadAverageFifteen: var_loadAverageFifteen,
+    );
+  }
+
+  @protected
+  DiskInfo sse_decode_disk_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_mountPoint = sse_decode_String(deserializer);
+    var var_totalBytes = sse_decode_u_64(deserializer);
+    var var_availableBytes = sse_decode_u_64(deserializer);
+    var var_usagePercent = sse_decode_f_64(deserializer);
+    var var_fileSystem = sse_decode_String(deserializer);
+    var var_diskType = sse_decode_String(deserializer);
+    var var_isRemovable = sse_decode_bool(deserializer);
+    return DiskInfo(
+      name: var_name,
+      mountPoint: var_mountPoint,
+      totalBytes: var_totalBytes,
+      availableBytes: var_availableBytes,
+      usagePercent: var_usagePercent,
+      fileSystem: var_fileSystem,
+      diskType: var_diskType,
+      isRemovable: var_isRemovable,
+    );
+  }
+
+  @protected
+  double sse_decode_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getFloat64();
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<CoreInfo> sse_decode_list_core_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <CoreInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_core_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<DiskInfo> sse_decode_list_disk_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <DiskInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_disk_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<NetworkInterfaceInfo> sse_decode_list_network_interface_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <NetworkInterfaceInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_network_interface_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  MemoryInfo sse_decode_memory_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_totalBytes = sse_decode_u_64(deserializer);
+    var var_usedBytes = sse_decode_u_64(deserializer);
+    var var_freeBytes = sse_decode_u_64(deserializer);
+    var var_availableBytes = sse_decode_u_64(deserializer);
+    var var_usagePercent = sse_decode_f_64(deserializer);
+    var var_swapTotalBytes = sse_decode_u_64(deserializer);
+    var var_swapUsedBytes = sse_decode_u_64(deserializer);
+    var var_swapFreeBytes = sse_decode_u_64(deserializer);
+    return MemoryInfo(
+      totalBytes: var_totalBytes,
+      usedBytes: var_usedBytes,
+      freeBytes: var_freeBytes,
+      availableBytes: var_availableBytes,
+      usagePercent: var_usagePercent,
+      swapTotalBytes: var_swapTotalBytes,
+      swapUsedBytes: var_swapUsedBytes,
+      swapFreeBytes: var_swapFreeBytes,
+    );
+  }
+
+  @protected
+  NetworkInterfaceInfo sse_decode_network_interface_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_macAddress = sse_decode_String(deserializer);
+    var var_ipAddresses = sse_decode_list_String(deserializer);
+    var var_totalReceivedBytes = sse_decode_u_64(deserializer);
+    var var_totalTransmittedBytes = sse_decode_u_64(deserializer);
+    return NetworkInterfaceInfo(
+      name: var_name,
+      macAddress: var_macAddress,
+      ipAddresses: var_ipAddresses,
+      totalReceivedBytes: var_totalReceivedBytes,
+      totalTransmittedBytes: var_totalTransmittedBytes,
+    );
+  }
+
+  @protected
+  BigInt? sse_decode_opt_box_autoadd_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_usize(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  BigInt sse_decode_u_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
   }
 
   @protected
@@ -263,21 +852,149 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
-  }
-
-  @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_usize(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(self, serializer);
+  }
+
+  @protected
+  void sse_encode_core_info(CoreInfo self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_u_64(self.frequencyMhz, serializer);
+    sse_encode_f_64(self.usagePercent, serializer);
+  }
+
+  @protected
+  void sse_encode_cpu_info(CpuInfo self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.arch, serializer);
+    sse_encode_String(self.brand, serializer);
+    sse_encode_String(self.vendorId, serializer);
+    sse_encode_opt_box_autoadd_usize(self.physicalCoreCount, serializer);
+    sse_encode_usize(self.logicalCoreCount, serializer);
+    sse_encode_u_64(self.globalFrequencyMhz, serializer);
+    sse_encode_f_64(self.globalUsagePercent, serializer);
+    sse_encode_list_core_info(self.cores, serializer);
+  }
+
+  @protected
+  void sse_encode_deep_device_info(
+    DeepDeviceInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_deep_system_info(self.system, serializer);
+    sse_encode_cpu_info(self.cpu, serializer);
+    sse_encode_memory_info(self.memory, serializer);
+    sse_encode_list_disk_info(self.disks, serializer);
+    sse_encode_list_network_interface_info(self.networkInterfaces, serializer);
+  }
+
+  @protected
+  void sse_encode_deep_system_info(
+    DeepSystemInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.hostName, serializer);
+    sse_encode_String(self.osName, serializer);
+    sse_encode_String(self.osVersion, serializer);
+    sse_encode_String(self.kernelVersion, serializer);
+    sse_encode_String(self.distributionId, serializer);
+    sse_encode_u_64(self.uptimeSeconds, serializer);
+    sse_encode_u_64(self.bootTimeUnix, serializer);
+    sse_encode_f_64(self.loadAverageOne, serializer);
+    sse_encode_f_64(self.loadAverageFive, serializer);
+    sse_encode_f_64(self.loadAverageFifteen, serializer);
+  }
+
+  @protected
+  void sse_encode_disk_info(DiskInfo self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.mountPoint, serializer);
+    sse_encode_u_64(self.totalBytes, serializer);
+    sse_encode_u_64(self.availableBytes, serializer);
+    sse_encode_f_64(self.usagePercent, serializer);
+    sse_encode_String(self.fileSystem, serializer);
+    sse_encode_String(self.diskType, serializer);
+    sse_encode_bool(self.isRemovable, serializer);
+  }
+
+  @protected
+  void sse_encode_f_64(double self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putFloat64(self);
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_core_info(
+    List<CoreInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_core_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_disk_info(
+    List<DiskInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_disk_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_network_interface_info(
+    List<NetworkInterfaceInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_network_interface_info(item, serializer);
+    }
   }
 
   @protected
@@ -288,6 +1005,51 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
     serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_memory_info(MemoryInfo self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_64(self.totalBytes, serializer);
+    sse_encode_u_64(self.usedBytes, serializer);
+    sse_encode_u_64(self.freeBytes, serializer);
+    sse_encode_u_64(self.availableBytes, serializer);
+    sse_encode_f_64(self.usagePercent, serializer);
+    sse_encode_u_64(self.swapTotalBytes, serializer);
+    sse_encode_u_64(self.swapUsedBytes, serializer);
+    sse_encode_u_64(self.swapFreeBytes, serializer);
+  }
+
+  @protected
+  void sse_encode_network_interface_info(
+    NetworkInterfaceInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.macAddress, serializer);
+    sse_encode_list_String(self.ipAddresses, serializer);
+    sse_encode_u_64(self.totalReceivedBytes, serializer);
+    sse_encode_u_64(self.totalTransmittedBytes, serializer);
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_usize(
+    BigInt? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_usize(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_u_64(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putBigUint64(self);
   }
 
   @protected
@@ -302,14 +1064,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer) {
+  void sse_encode_usize(BigInt self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putInt32(self);
+    serializer.buffer.putBigUint64(self);
   }
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
+  void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
+    serializer.buffer.putInt32(self);
   }
 }

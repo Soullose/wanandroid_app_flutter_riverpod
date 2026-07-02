@@ -1,5 +1,5 @@
 use flutter_rust_bridge::frb;
-use sysinfo::{Networks, System};
+use sysinfo::System;
 
 #[frb(sync)]
 pub fn cpu_arch() -> String {

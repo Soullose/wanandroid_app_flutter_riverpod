@@ -6,6 +6,7 @@
 // Static analysis wrongly picks the IO variant, thus ignore this
 // ignore_for_file: argument_type_not_assignable
 
+import 'api/device_info.dart';
 import 'api/simple.dart';
 import 'api/sysinfo.dart';
 import 'dart:async';
@@ -25,7 +26,57 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String dco_decode_String(dynamic raw);
 
   @protected
+  bool dco_decode_bool(dynamic raw);
+
+  @protected
+  BigInt dco_decode_box_autoadd_usize(dynamic raw);
+
+  @protected
+  CoreInfo dco_decode_core_info(dynamic raw);
+
+  @protected
+  CpuInfo dco_decode_cpu_info(dynamic raw);
+
+  @protected
+  DeepDeviceInfo dco_decode_deep_device_info(dynamic raw);
+
+  @protected
+  DeepSystemInfo dco_decode_deep_system_info(dynamic raw);
+
+  @protected
+  DiskInfo dco_decode_disk_info(dynamic raw);
+
+  @protected
+  double dco_decode_f_64(dynamic raw);
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<CoreInfo> dco_decode_list_core_info(dynamic raw);
+
+  @protected
+  List<DiskInfo> dco_decode_list_disk_info(dynamic raw);
+
+  @protected
+  List<NetworkInterfaceInfo> dco_decode_list_network_interface_info(
+    dynamic raw,
+  );
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  MemoryInfo dco_decode_memory_info(dynamic raw);
+
+  @protected
+  NetworkInterfaceInfo dco_decode_network_interface_info(dynamic raw);
+
+  @protected
+  BigInt? dco_decode_opt_box_autoadd_usize(dynamic raw);
+
+  @protected
+  BigInt dco_decode_u_64(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -34,10 +85,65 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  BigInt dco_decode_usize(dynamic raw);
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  BigInt sse_decode_box_autoadd_usize(SseDeserializer deserializer);
+
+  @protected
+  CoreInfo sse_decode_core_info(SseDeserializer deserializer);
+
+  @protected
+  CpuInfo sse_decode_cpu_info(SseDeserializer deserializer);
+
+  @protected
+  DeepDeviceInfo sse_decode_deep_device_info(SseDeserializer deserializer);
+
+  @protected
+  DeepSystemInfo sse_decode_deep_system_info(SseDeserializer deserializer);
+
+  @protected
+  DiskInfo sse_decode_disk_info(SseDeserializer deserializer);
+
+  @protected
+  double sse_decode_f_64(SseDeserializer deserializer);
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<CoreInfo> sse_decode_list_core_info(SseDeserializer deserializer);
+
+  @protected
+  List<DiskInfo> sse_decode_list_disk_info(SseDeserializer deserializer);
+
+  @protected
+  List<NetworkInterfaceInfo> sse_decode_list_network_interface_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  MemoryInfo sse_decode_memory_info(SseDeserializer deserializer);
+
+  @protected
+  NetworkInterfaceInfo sse_decode_network_interface_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  BigInt? sse_decode_opt_box_autoadd_usize(SseDeserializer deserializer);
+
+  @protected
+  BigInt sse_decode_u_64(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_8(SseDeserializer deserializer);
@@ -46,13 +152,58 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
-  void sse_encode_String(String self, SseSerializer serializer);
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_usize(BigInt self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_core_info(CoreInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_cpu_info(CpuInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_deep_device_info(
+    DeepDeviceInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_deep_system_info(
+    DeepSystemInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_disk_info(DiskInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_f_64(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_core_info(List<CoreInfo> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_disk_info(List<DiskInfo> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_network_interface_info(
+    List<NetworkInterfaceInfo> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_prim_u_8_strict(
@@ -61,16 +212,31 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_memory_info(MemoryInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_network_interface_info(
+    NetworkInterfaceInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_usize(BigInt? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_64(BigInt self, SseSerializer serializer);
+
+  @protected
   void sse_encode_u_8(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
+  void sse_encode_usize(BigInt self, SseSerializer serializer);
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  void sse_encode_i_32(int self, SseSerializer serializer);
 }
 
 // Section: wire_class

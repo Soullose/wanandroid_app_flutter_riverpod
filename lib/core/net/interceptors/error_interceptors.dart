@@ -89,6 +89,8 @@ class ErrorInterceptors extends InterceptorsWrapper {
         return '证书验证失败';
       case DioExceptionType.unknown:
         return err.message ?? '未知错误';
+      case DioExceptionType.transformTimeout:
+        return '数据处理超时';
     }
   }
 }
