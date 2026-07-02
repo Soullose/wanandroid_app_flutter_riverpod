@@ -13,10 +13,10 @@ allprojects {
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
 
         // 网易镜像
-        maven { url 'https://mirrors.163.com/maven/repository/maven-public/' }
+        // maven { url 'https://mirrors.163.com/maven/repository/maven-public/' }
 
         // 首都在线
-        maven { url 'https://maven.oscs.oschina.net/content/groups/public/' }
+        // maven { url 'https://maven.oscs.oschina.net/content/groups/public/' }
         google()
         mavenCentral()
     }
