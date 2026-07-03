@@ -11,9 +11,6 @@ abstract class ArticleState with _$ArticleState {
   const factory ArticleState({
     required List<Articles> articles,
     required int page,
-    required bool hasReachedMax,
-    @Default(false) bool isLoadingMore,
-    @Default(null) String? loadMoreError,
   }) = _ArticleState;
 
   factory ArticleState.fromJson(Map<String, dynamic> json) =>
