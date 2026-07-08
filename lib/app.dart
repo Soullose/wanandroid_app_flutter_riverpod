@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/theme/app_theme_mode.dart';
-import 'package:wanandroid_app_flutter_riverpod/shared/widgets/device/debug_device_panel.dart';
 import 'package:wanandroid_app_flutter_riverpod/shared/widgets/network/network_aware_wrapper.dart';
 
 import 'common/router/app_router.dart';
@@ -38,13 +37,8 @@ class _AppState extends ConsumerState<App> {
             final easyLoadingBuilder = EasyLoading.init();
             final easyLoadingChild = easyLoadingBuilder(context, child);
 
-            // 包装网络状态横幅 + 调试面板
-            return Stack(
-              children: [
-                NetworkAwareWrapper(child: easyLoadingChild),
-                const DebugDevicePanel(),
-              ],
-            );
+            // 包装网络状态横幅
+            return NetworkAwareWrapper(child: easyLoadingChild);
           },
         );
       },
