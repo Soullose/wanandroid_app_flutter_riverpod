@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wanandroid_app_flutter_riverpod/src/rust/api/device_info.dart' as rust;
+import 'package:wanandroid_app_flutter_riverpod/src/rust/api/device_info.dart'
+    as rust;
 
 /// 可直接嵌入设置页面的设备信息模块
 ///
@@ -25,7 +26,10 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
   void initState() {
     super.initState();
     _fetchData();
-    _refreshTimer = Timer.periodic(const Duration(seconds: 5), (_) => _fetchData());
+    _refreshTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _fetchData(),
+    );
   }
 
   @override
@@ -73,8 +77,10 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: Text('❌ $_error',
-                    style: const TextStyle(fontSize: 12, color: Colors.red)),
+                child: Text(
+                  '❌ $_error',
+                  style: const TextStyle(fontSize: 12, color: Colors.red),
+                ),
               )
             else if (_deepInfo == null)
               const Center(
@@ -94,18 +100,23 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
   Widget _buildHeader(ColorScheme colorScheme) {
     return Row(
       children: [
-        Text('📊 设备信息',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: colorScheme.onSurface)),
+        Text(
+          '📊 设备信息',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: colorScheme.onSurface,
+          ),
+        ),
         const Spacer(),
         if (_isLoading)
           const Padding(
             padding: EdgeInsets.only(right: 8),
             child: SizedBox(
-                width: 12, height: 12,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+              width: 12,
+              height: 12,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
           ),
         IconButton(
           icon: Icon(Icons.refresh, size: 18, color: colorScheme.primary),
@@ -125,35 +136,38 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
       children: [
         _buildSectionTitle('💻 系统', colorScheme),
         _buildKeyValue('主机名', info.system.hostName),
-        _buildKeyValue('系统',
-            '${info.system.osName} ${info.system.osVersion}'),
+        _buildKeyValue('系统', '${info.system.osName} ${info.system.osVersion}'),
         _buildKeyValue('内核', info.system.kernelVersion),
-        _buildKeyValue('运行时长',
-            _formatDuration(info.system.uptimeSeconds)),
-        _buildKeyValue('负载',
-            '${info.system.loadAverageOne.toStringAsFixed(2)} / ${info.system.loadAverageFive.toStringAsFixed(2)} / ${info.system.loadAverageFifteen.toStringAsFixed(2)}'),
+        _buildKeyValue('运行时长', _formatDuration(info.system.uptimeSeconds)),
+        _buildKeyValue(
+          '负载',
+          '${info.system.loadAverageOne.toStringAsFixed(2)} / ${info.system.loadAverageFive.toStringAsFixed(2)} / ${info.system.loadAverageFifteen.toStringAsFixed(2)}',
+        ),
 
         const SizedBox(height: 8),
         _buildSectionTitle('🧠 CPU', colorScheme),
         _buildKeyValue('型号', _crop(info.cpu.brand, 40)),
         _buildKeyValue('架构', info.cpu.arch),
-        _buildKeyValue('核心',
-            '${info.cpu.physicalCoreCount ?? "?"} 物理 / ${info.cpu.logicalCoreCount} 逻辑'),
         _buildKeyValue(
-            '主频', '${info.cpu.globalFrequencyMhz} MHz'),
-        _buildProgressBar(
-            '使用率', info.cpu.globalUsagePercent, Colors.blue),
+          '核心',
+          '${info.cpu.physicalCoreCount ?? "?"} 物理 / ${info.cpu.logicalCoreCount} 逻辑',
+        ),
+        _buildKeyValue('主频', '${info.cpu.globalFrequencyMhz} MHz'),
+        _buildProgressBar('使用率', info.cpu.globalUsagePercent, Colors.blue),
 
         const SizedBox(height: 8),
         _buildSectionTitle('🧮 内存', colorScheme),
         _buildKeyValue('总量', _bytesHuman(info.memory.totalBytes)),
-        _buildKeyValue('已用 / 可用',
-            '${_bytesHuman(info.memory.usedBytes)} / ${_bytesHuman(info.memory.availableBytes)}'),
-        _buildProgressBar(
-            '使用率', info.memory.usagePercent, Colors.purple),
+        _buildKeyValue(
+          '已用 / 可用',
+          '${_bytesHuman(info.memory.usedBytes)} / ${_bytesHuman(info.memory.availableBytes)}',
+        ),
+        _buildProgressBar('使用率', info.memory.usagePercent, Colors.purple),
         if (info.memory.swapTotalBytes > BigInt.zero)
-          _buildKeyValue('Swap',
-              '${_bytesHuman(info.memory.swapUsedBytes)} / ${_bytesHuman(info.memory.swapTotalBytes)}'),
+          _buildKeyValue(
+            'Swap',
+            '${_bytesHuman(info.memory.swapUsedBytes)} / ${_bytesHuman(info.memory.swapTotalBytes)}',
+          ),
 
         if (info.disks.isNotEmpty) ...[
           const SizedBox(height: 8),
@@ -162,10 +176,13 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
           if (info.disks.length > 3)
             Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Text('… 还有 ${info.disks.length - 3} 个',
-                  style: TextStyle(
-                      fontSize: 10,
-                      color: colorScheme.onSurfaceVariant)),
+              child: Text(
+                '… 还有 ${info.disks.length - 3} 个',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
         ],
 
@@ -183,11 +200,14 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
   Widget _buildSectionTitle(String text, ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
-      child: Text(text,
-          style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: colorScheme.primary)),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: colorScheme.primary,
+        ),
+      ),
     );
   }
 
@@ -197,36 +217,39 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
       child: Row(
         children: [
           SizedBox(
-              width: 80,
-              child: Text(label,
-                  style: const TextStyle(
-                      fontSize: 11, color: Colors.grey))),
+            width: 80,
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 11, color: Colors.grey),
+            ),
+          ),
           Expanded(
-            child: Text(value,
-                style: const TextStyle(fontSize: 11),
-                overflow: TextOverflow.ellipsis),
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 11),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildProgressBar(
-      String label, double percent, Color color) {
+  Widget _buildProgressBar(String label, double percent, Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           const SizedBox(
-              width: 80,
-              child: Text('',
-                  style: TextStyle(fontSize: 11))),
+            width: 80,
+            child: Text('', style: TextStyle(fontSize: 11)),
+          ),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: percent / 100,
-                backgroundColor: color.withOpacity(0.15),
+                backgroundColor: color.withValues(alpha: 0.15),
                 valueColor: AlwaysStoppedAnimation(color),
                 minHeight: 8,
               ),
@@ -235,9 +258,11 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
           const SizedBox(width: 6),
           SizedBox(
             width: 44,
-            child: Text('${percent.toStringAsFixed(1)}%',
-                style: const TextStyle(fontSize: 10),
-                textAlign: TextAlign.right),
+            child: Text(
+              '${percent.toStringAsFixed(1)}%',
+              style: const TextStyle(fontSize: 10),
+              textAlign: TextAlign.right,
+            ),
           ),
         ],
       ),
@@ -247,16 +272,18 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
   Widget _buildDiskItem(rust.DiskInfo disk) {
     final usedPercent = disk.totalBytes > BigInt.zero
         ? (disk.totalBytes - disk.availableBytes).toInt() /
-                disk.totalBytes.toInt() *
-            100
+              disk.totalBytes.toInt() *
+              100
         : 0.0;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${disk.mountPoint} (${disk.diskType})',
-              style: const TextStyle(fontSize: 10)),
+          Text(
+            '${disk.mountPoint} (${disk.diskType})',
+            style: const TextStyle(fontSize: 10),
+          ),
           Row(
             children: [
               Expanded(
@@ -264,29 +291,34 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: usedPercent / 100,
-                    backgroundColor: Colors.teal.withOpacity(0.15),
+                    backgroundColor: Colors.teal.withValues(alpha: 0.15),
                     valueColor: AlwaysStoppedAnimation(
-                        usedPercent > 85 ? Colors.red : Colors.teal),
+                      usedPercent > 85 ? Colors.red : Colors.teal,
+                    ),
                     minHeight: 6,
                   ),
                 ),
               ),
               const SizedBox(width: 4),
-              Text('${usedPercent.toStringAsFixed(0)}%',
-                  style: const TextStyle(fontSize: 10)),
+              Text(
+                '${usedPercent.toStringAsFixed(0)}%',
+                style: const TextStyle(fontSize: 10),
+              ),
             ],
           ),
           Text(
-              '${_bytesHuman(disk.availableBytes)} 可用 / ${_bytesHuman(disk.totalBytes)}',
-              style:
-                  const TextStyle(fontSize: 9, color: Colors.grey)),
+            '${_bytesHuman(disk.availableBytes)} 可用 / ${_bytesHuman(disk.totalBytes)}',
+            style: const TextStyle(fontSize: 9, color: Colors.grey),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildNetworkItem(
-      rust.NetworkInterfaceInfo net, ColorScheme colorScheme) {
+    rust.NetworkInterfaceInfo net,
+    ColorScheme colorScheme,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Column(
@@ -294,24 +326,31 @@ class _DeviceInfoSectionState extends ConsumerState<DeviceInfoSection> {
         children: [
           Row(
             children: [
-              Text(net.name,
-                  style: const TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.w500)),
+              Text(
+                net.name,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const SizedBox(width: 8),
-              Text(net.macAddress,
-                  style: TextStyle(
-                      fontSize: 9,
-                      color: colorScheme.onSurfaceVariant)),
+              Text(
+                net.macAddress,
+                style: TextStyle(
+                  fontSize: 9,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
             ],
           ),
           if (net.ipAddresses.isNotEmpty)
-            Text(net.ipAddresses.join(', '),
-                style:
-                    const TextStyle(fontSize: 9, color: Colors.grey)),
+            Text(
+              net.ipAddresses.join(', '),
+              style: const TextStyle(fontSize: 9, color: Colors.grey),
+            ),
           Text(
             '📥 ${_bytesHuman(net.totalReceivedBytes)} / 📤 ${_bytesHuman(net.totalTransmittedBytes)}',
-            style:
-                const TextStyle(fontSize: 9, color: Colors.grey),
+            style: const TextStyle(fontSize: 9, color: Colors.grey),
           ),
         ],
       ),

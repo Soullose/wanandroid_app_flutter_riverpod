@@ -92,7 +92,7 @@ class _LogManagementPageState extends ConsumerState<LogManagementPage> {
               return _buildCleanupBanner(theme, recommendation);
             },
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
 
           // 统计信息
@@ -158,7 +158,7 @@ class _LogManagementPageState extends ConsumerState<LogManagementPage> {
             fileCount.when(
               data: (count) => '$count 个',
               loading: () => '...',
-              error: (_, __) => '-',
+              error: (_, _) => '-',
             ),
           ),
           Container(width: 1, height: 40, color: theme.dividerColor),
@@ -169,7 +169,7 @@ class _LogManagementPageState extends ConsumerState<LogManagementPage> {
             totalSize.when(
               data: (size) => _formatSize(size),
               loading: () => '...',
-              error: (_, __) => '-',
+              error: (_, _) => '-',
             ),
           ),
         ],
@@ -351,7 +351,10 @@ class _LogManagementPageState extends ConsumerState<LogManagementPage> {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: _getLevelColor(theme, entry.level).withOpacity(0.1),
+                    color: _getLevelColor(
+                      theme,
+                      entry.level,
+                    ).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -403,7 +406,7 @@ class _LogManagementPageState extends ConsumerState<LogManagementPage> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(icon, color: color),
