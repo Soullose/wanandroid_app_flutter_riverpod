@@ -1,0 +1,3 @@
+[submodule ".reasonix/vendor/flutter-skills"]
+	path = .reasonix/vendor/flutter-skills
+	url = https://github.com/flutter/skills.git
