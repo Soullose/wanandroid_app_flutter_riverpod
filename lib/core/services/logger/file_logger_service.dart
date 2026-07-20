@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -106,11 +105,13 @@ class FileLoggerService {
           'frequencyMhz': deepInfo.cpu.globalFrequencyMhz,
           'usagePercent': deepInfo.cpu.globalUsagePercent,
           'cores': deepInfo.cpu.cores
-              .map((c) => {
-                    'name': c.name,
-                    'frequencyMhz': c.frequencyMhz,
-                    'usagePercent': c.usagePercent,
-                  })
+              .map(
+                (c) => {
+                  'name': c.name,
+                  'frequencyMhz': c.frequencyMhz,
+                  'usagePercent': c.usagePercent,
+                },
+              )
               .toList(),
         },
         'memory': {
@@ -124,25 +125,29 @@ class FileLoggerService {
           'swapFreeBytes': deepInfo.memory.swapFreeBytes,
         },
         'disks': deepInfo.disks
-            .map((d) => {
-                  'name': d.name,
-                  'mountPoint': d.mountPoint,
-                  'totalBytes': d.totalBytes,
-                  'availableBytes': d.availableBytes,
-                  'usagePercent': d.usagePercent,
-                  'fileSystem': d.fileSystem,
-                  'diskType': d.diskType,
-                  'isRemovable': d.isRemovable,
-                })
+            .map(
+              (d) => {
+                'name': d.name,
+                'mountPoint': d.mountPoint,
+                'totalBytes': d.totalBytes,
+                'availableBytes': d.availableBytes,
+                'usagePercent': d.usagePercent,
+                'fileSystem': d.fileSystem,
+                'diskType': d.diskType,
+                'isRemovable': d.isRemovable,
+              },
+            )
             .toList(),
         'networkInterfaces': deepInfo.networkInterfaces
-            .map((n) => {
-                  'name': n.name,
-                  'macAddress': n.macAddress,
-                  'ipAddresses': n.ipAddresses,
-                  'totalReceivedBytes': n.totalReceivedBytes,
-                  'totalTransmittedBytes': n.totalTransmittedBytes,
-                })
+            .map(
+              (n) => {
+                'name': n.name,
+                'macAddress': n.macAddress,
+                'ipAddresses': n.ipAddresses,
+                'totalReceivedBytes': n.totalReceivedBytes,
+                'totalTransmittedBytes': n.totalTransmittedBytes,
+              },
+            )
             .toList(),
       };
       mergedAdditionalData = {
@@ -300,9 +305,7 @@ class FileLoggerService {
             }
           }
         } else {
-          buffer.writeln(
-            '$indent${entry.key}: [${value.join(", ")}]',
-          );
+          buffer.writeln('$indent${entry.key}: [${value.join(", ")}]');
         }
       } else {
         buffer.writeln('$indent${entry.key}: $value');

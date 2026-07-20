@@ -121,7 +121,7 @@ List<RouteBase> get routes => [
       GoRoute(
         path: RouterPath.logManagement.path,
         name: RouterPath.logManagement.description,
-        builder: (_, ____) => const LogManagementPage(),
+        builder: (_, _) => const LogManagementPage(),
       ),
     ],
   ),
